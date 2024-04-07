@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Users, UsersSchema } from './schema/auth.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
-import { AuthGuard } from 'src/shared/guards/auth.guard';
+import { AuthGuard } from '../../common/guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 
 
