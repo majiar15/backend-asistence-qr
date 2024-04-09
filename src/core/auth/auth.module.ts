@@ -14,8 +14,8 @@ import { dataSourceModule } from '@datasource/datasouce.module';
     dataSourceModule,
     JwtModule.register({
       global: true,
-      secret: EnvConfiguration().jwt_secret,
-      signOptions: { expiresIn: '300s' },
+      secret: `${EnvConfiguration().jwt_secret}`,
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [AuthController],

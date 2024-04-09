@@ -12,9 +12,9 @@ export class LoginUseCase {
   user!: Document<unknown, {}, Users> & Users & {
     _id: Types.ObjectId;
   };
-  email: string = '';
+  dni: number = -1;
   password: string = '';
-  response: { token: string; data: Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; }; }
+  response: {status:boolean; token: string; data: Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; }; }
   constructor(private userDatasource: UserDataSource,private jwtService: JwtService) {}
 
   async main(userLoginObject: LoginAuthDto) {
@@ -24,6 +24,7 @@ export class LoginUseCase {
       await this.checkAndDecodePassword()
       await this.generateTokenJWT()
     } catch (error) {
+      console.log("🚀 ~ LoginUseCase ~ main ~ error:", error)
       throw error
     }
     return this.response
@@ -34,29 +35,30 @@ export class LoginUseCase {
   private subtractDataBody(userLoginObject: LoginAuthDto){
     console.log("subtractDataBody ===================");
 
-    this.email = userLoginObject.email;
+    this.dni = userLoginObject.dni;
     this.password = userLoginObject.password;
   }
   private async getDataUser(){
-    const findUser = await this.userDatasource.getUserByEmail(this.email);
+    const findUser = await this.userDatasource.getUserByDni(this.dni);
     console.log("findUser ===================", findUser);
     if (!findUser){
-      throw new HttpException('USER_NOT_FOUND', 404)
+      throw new HttpException({status:false,message:'USER_NOT_FOUND'}, 404)
     }
     this.user = findUser;
   }
   private async checkAndDecodePassword() {
     const checkPassword = await bcrypt.compare(this.password, this.user.password);
-    if (!checkPassword) throw new HttpException('PASSWORD_INCORRECT', 403)
+    if (!checkPassword) throw new HttpException({status:false, message:'PASSWORD_INCORRECT'}, 403)
     this.user.set('password', undefined, { strict: false })
   }
   private async generateTokenJWT() {
     const payload ={
       id: this.user._id,
       name: this.user.name,
-      email: this.user.email
+      email: this.user.email,
+      role:this.user.role
     }
-    const token = await this.jwtService.sign(payload);
-    this.response = {token, data: this.user};
+    const token = await this.jwtService.signAsync(payload);
+    this.response = {status:true, token, data: this.user};
   }
 }

@@ -1,7 +1,7 @@
 import { LoginUseCase } from "./domain/login.useCase"
 import { UserDataSource } from "@datasource/user.datasource"
 import { LoginAuthDto } from "./dto/login-auth.dto"
-import { BadRequestException, Injectable } from "@nestjs/common"
+import { Injectable } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import { RegisterAuthDto } from "./dto/register-auth.dto"
 import { RegisterUseCase } from "./domain/register.useCase"
@@ -18,7 +18,7 @@ export class AuthService {
       const data = await userUseCase.main(userLoginObject)
       return data;
     } catch (error) {
-      throw new BadRequestException("error login");
+      throw error;
     }
   }
   async register(userRegister: RegisterAuthDto) {
@@ -27,7 +27,7 @@ export class AuthService {
       const data = await userUseCase.main(userRegister)
       return data;
     } catch (error) {
-      throw new BadRequestException("error register");
+      throw error
     }
   }
 }

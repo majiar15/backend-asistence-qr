@@ -8,8 +8,8 @@ export class UserDataSource {
         @InjectModel(Users.name) private users: Model<Users>,
     ) {}
 
-    getUserByEmail(email: string){
-        return this.users.findOne({ email });
+    getUserByDni(dni: number){
+        return this.users.findOne({ dni });
     }
     saveUser(user: RegisterAuthDto){
         return this.users.create(user);
