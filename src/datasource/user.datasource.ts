@@ -14,4 +14,21 @@ export class UserDataSource {
     saveUser(user: RegisterAuthDto){
         return this.users.create(user);
     }
+
+    getAllUser(role:string){
+        return this.users.find({role}).select('-password');
+    }
+
+    getUserById(id:string){
+        return this.users.findById(id).select('-password');
+    }
+
+ 
+    updateUser(id:string,data){
+        return this.users.findByIdAndUpdate(id,data) 
+    }
+
+    deleteUser(id:string){
+        return this.users.deleteOne({_id:id})
+    }
 }

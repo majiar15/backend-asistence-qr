@@ -5,14 +5,18 @@ import { AuthModule } from '@core/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EnvConfiguration } from '@common/config/env.config';
+import { TeacherModule } from './core/teacher/teacher.module';
 
 
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     AuthModule,
     MongooseModule.forRoot(EnvConfiguration().db_uri),
+    TeacherModule,
   ],
   controllers: [AppController],
   providers: [AppService],

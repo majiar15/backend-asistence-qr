@@ -6,16 +6,18 @@ import { AuthGuard } from '@common/guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { EnvConfiguration } from '@common/config/env.config';
 import { dataSourceModule } from '@datasource/datasouce.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 
 @Module({
   imports:[
+    ConfigModule.forRoot(),
     dataSourceModule,
     JwtModule.register({
       global: true,
-      secret: `${EnvConfiguration().jwt_secret}`,
-      signOptions: { expiresIn: '1h' },
+      secret: EnvConfiguration().jwt_secret,
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [AuthController],
