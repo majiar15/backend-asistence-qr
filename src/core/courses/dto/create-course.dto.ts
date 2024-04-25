@@ -1,13 +1,10 @@
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, MinLength, ValidateNested } from "class-validator";
+import { IsNotEmpty, MinLength, ValidateNested } from "class-validator";
 
 export class CreateCourseDto {
     @IsNotEmpty()
     name:string;
 
-    @IsNotEmpty()
-    @IsNumber()
-    credits:number
 
     @IsNotEmpty()
     teacher_id :string;

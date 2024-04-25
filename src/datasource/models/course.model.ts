@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
-export type CoursesDocument = HydratedDocument<Courses>;
 
 @Schema()
-export class Courses {
+export class Courses extends Document {
 
 
     @Prop({ required: true })
@@ -32,5 +31,6 @@ export class Courses {
     status:boolean;
 
 }
+export type CoursesDocument = Courses & Document;
 
 export const CoursesSchema = SchemaFactory.createForClass(Courses);
