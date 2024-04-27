@@ -2,11 +2,15 @@
 import { UserDataSource } from "@datasource/user.datasource";
 import * as bcrypt from 'bcrypt';
 import { RegisterAuthDto } from "../dto/register-auth.dto";
+import { Role } from "@common/utils/rol.enum";
 
 
 export class RegisterUseCase {
   user!: RegisterAuthDto;
-  constructor(private userDatasource: UserDataSource) { }
+  role: Role
+  constructor(private userDatasource: UserDataSource, role: Role) { 
+    this.role = role;
+  }
 
   async main(userRegister: RegisterAuthDto) {
 
@@ -31,7 +35,6 @@ export class RegisterUseCase {
 
   }
   private async saveUser() {
-
     return this.userDatasource.saveUser(this.user);
   }
 }

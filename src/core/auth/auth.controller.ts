@@ -3,6 +3,9 @@ import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { Public } from '@common/decorators/public.decorator';
+import { Role } from '@common/utils/rol.enum';
+import { Roles } from '@common/decorators/roles.decorator';
+import { SecretKey } from '@common/decorators/secret-key.decorator';
 
 
 @Controller('auth')
@@ -14,11 +17,22 @@ export class AuthController {
    * @param registerAuthDto 
    * @returns 
    */
-  @Public()
+  @Roles(Role.Admin)
   @Post('register')
-  regiterUser(@Body() registerAuthDto: RegisterAuthDto) {
+  registerUser(@Body() registerAuthDto: RegisterAuthDto) {
+    return this.authService.register(registerAuthDto, Role.Student);
+  }
 
-    return this.authService.register(registerAuthDto);
+  @SecretKey()
+  @Post('register/admin')
+  registerAdmin(@Body() registerAuthDto: RegisterAuthDto) {
+    return this.authService.register(registerAuthDto, Role.Admin);
+  }
+
+  @Roles(Role.Admin)
+  @Post('register/teacher')
+  registerTeacher(@Body() registerAuthDto: RegisterAuthDto) {
+    return this.authService.register(registerAuthDto, Role.Teacher);
   }
 
 
@@ -28,5 +42,4 @@ export class AuthController {
 
     return this.authService.login(userLoginObject)
   }
-  
 }

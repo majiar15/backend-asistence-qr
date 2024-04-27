@@ -6,6 +6,8 @@ import { Courses, CoursesSchema } from './models/course.model';
 import { Schedule, ScheduleSchema } from './models/schedule.model';
 import { CoursesDataSource } from './course.datasource';
 import { ScheduleDataSource } from './schedule.datasource';
+import { SecretDataSource } from './secret.datasource';
+import { Secret, SecretSchema } from './models/secret.model';
 
 
 
@@ -14,9 +16,10 @@ import { ScheduleDataSource } from './schedule.datasource';
         MongooseModule.forFeature([{ name: Users.name, schema: UsersSchema }]),
         MongooseModule.forFeature([{ name: Courses.name, schema: CoursesSchema }]),
         MongooseModule.forFeature([{ name: Schedule.name, schema: ScheduleSchema }]),
+        MongooseModule.forFeature([{ name: Secret.name, schema: SecretSchema }]),
     ],
     controllers: [],
-    exports: [ UserDataSource,CoursesDataSource,ScheduleDataSource ],
-    providers: [ UserDataSource,CoursesDataSource,ScheduleDataSource ]
+    exports: [ UserDataSource,CoursesDataSource,ScheduleDataSource, SecretDataSource ],
+    providers: [ UserDataSource,CoursesDataSource,ScheduleDataSource, SecretDataSource ]
 })
 export class dataSourceModule { }

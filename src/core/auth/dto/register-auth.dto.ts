@@ -14,6 +14,7 @@ export class RegisterAuthDto extends PartialType(LoginAuthDto) {
     @IsNotEmpty()
     @IsNumber()
     @Min(1000000000)
-    phone:number
+    phone:number;
 
+    role?: string;
 }

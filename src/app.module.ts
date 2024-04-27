@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EnvConfiguration } from '@common/config/env.config';
 import { TeacherModule } from './core/teacher/teacher.module';
 import { CoursesModule } from './core/courses/courses.module';
+import { AdminModule } from '@core/admin/admin.module';
 
 
 
@@ -19,6 +20,7 @@ import { CoursesModule } from './core/courses/courses.module';
     MongooseModule.forRoot(EnvConfiguration().db_uri),
     TeacherModule,
     CoursesModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
