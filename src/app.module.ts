@@ -8,6 +8,7 @@ import { EnvConfiguration } from '@common/config/env.config';
 import { TeacherModule } from './core/teacher/teacher.module';
 import { CoursesModule } from './core/courses/courses.module';
 import { AdminModule } from '@core/admin/admin.module';
+import { StudentModule } from './core/student/student.module';
 
 
 
@@ -21,6 +22,7 @@ import { AdminModule } from '@core/admin/admin.module';
     TeacherModule,
     CoursesModule,
     AdminModule,
+    StudentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -10,17 +10,12 @@ export class CreateCourseDto {
     teacher_id :string;
 
     @IsNotEmpty()
-    start:string;
+    date_start:string;
 
     @IsNotEmpty()
-    end:string;
+    date_end:string;
 
     description:string;
-
-    @IsNotEmpty()
-    room:string;
-
-    status:boolean;
 
     @IsNotEmpty()
     @ValidateNested({ each: true })
@@ -31,12 +26,15 @@ export class CreateCourseDto {
 export class ScheduleDto {
 
     @IsNotEmpty()
-    start_hour:string;
+    hour_start:string;
 
     @IsNotEmpty()
-    end_hour:string;
+    hour_end:string;
 
     @IsNotEmpty()
     @MinLength(4)
     week_day:string;
+
+    @IsNotEmpty()
+    room:string;
 }

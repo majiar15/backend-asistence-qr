@@ -12,4 +12,8 @@ export class ScheduleDataSource {
         return this.schedule.create(schedule);
         
     }
+
+    getSchedule(course_id:string){
+        return this.schedule.find({course_id:course_id})
+    }
 }

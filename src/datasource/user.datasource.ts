@@ -25,7 +25,7 @@ export class UserDataSource {
 
  
     updateUser(id:string,data){
-        return this.users.findByIdAndUpdate(id,data) 
+        return this.users.findByIdAndUpdate(id,data,{ new: true }) 
     }
 
     deleteUser(id:string){

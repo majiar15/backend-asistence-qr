@@ -51,7 +51,6 @@ export class CreateCoursesUseCase {
     async saveCourse() {
         const data = await this.coursesDataSource.saveCourse(this.course)
         this.courseDb = data;
-        console.log("🚀 ~ GUARDAR CURSO:", data)
     }
 
     addCourseIdASchedules() {

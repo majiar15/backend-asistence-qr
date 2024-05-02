@@ -19,6 +19,7 @@ export class TeacherController {
   }
 
   @Get()
+  @Roles(Role.Admin)
   getAllTeachers() {
     return this.teacherService.getAllTeachers();
   }
@@ -29,11 +30,13 @@ export class TeacherController {
   }
 
   @Put(':id')
+  @Roles(Role.Admin)
   update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
     return this.teacherService.update(id, updateTeacherDto);
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   remove(@Param('id') id: string) {
     return this.teacherService.remove(id);
   }

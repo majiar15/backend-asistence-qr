@@ -4,6 +4,7 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { CreateCoursesUseCase } from './domain/create-courses.useCase';
 import { CoursesDataSource } from '@datasource/course.datasource';
 import { ScheduleDataSource } from '@datasource/schedule.datasource';
+import { GetAllCoursesUseCase } from './domain/get-all-courses.useCase';
 
 @Injectable()
 export class CoursesService {
@@ -22,11 +23,19 @@ export class CoursesService {
       throw error;
     }
 
-    return 'This action adds a new course';
   }
 
   findAll() {
-    return `This action returns all courses`;
+
+    try {
+      
+      const courseUseCase = new GetAllCoursesUseCase(this.courseModel, this.scheduleModel)
+      const data = courseUseCase.main();
+    
+      return data
+    } catch (error) {
+      throw error;
+    }
   }
 
   findOne(id: number) {

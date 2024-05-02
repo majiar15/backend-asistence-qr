@@ -3,18 +3,21 @@ import mongoose, { Document } from 'mongoose';
 
 export type ScheduleDocument = Schedule & Document;
 
-@Schema()
+@Schema({versionKey:false})
 export class Schedule {
   @Prop({ required: true })
   week_day: string;
 
   @Prop({ required: true })
-  start_hour: string;
+  hour_start: string;
 
   @Prop({ required: true })
-  end_hour: string;
+  hour_end: string;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: 'Course', required: true })
+  @Prop()
+  room:string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true })
   course_id: string; // Referencia al ID del curso
 }
 
