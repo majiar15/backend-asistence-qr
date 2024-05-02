@@ -1,16 +1,15 @@
-
-import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { AcademicProgram } from "./models/academic_programs.model";
-
+import { AcademicProgram, AcademicProgramDocument } from "./models/academic_programs.model";
+import { Model } from "mongoose";
 
 export class AcademicProgramDataSource {
     constructor(
-        @InjectModel(AcademicProgram.name) private academicProgram: Model<AcademicProgram>,
-    ) {}
+        @InjectModel(AcademicProgram.name) 
+        private readonly academicProgram: Model<AcademicProgramDocument>,
+    ) { }
 
 
-    getAcademicProgram(){
+    async getAcademicProgram() {
         return this.academicProgram.find({})
     }
 }

@@ -9,6 +9,7 @@ import { TeacherModule } from './core/teacher/teacher.module';
 import { CoursesModule } from './core/courses/courses.module';
 import { AdminModule } from '@core/admin/admin.module';
 import { StudentModule } from './core/student/student.module';
+import { AcademicProgramModule } from './core/academic_program/academic_program.module';
 
 
 
@@ -23,6 +24,8 @@ import { StudentModule } from './core/student/student.module';
     CoursesModule,
     AdminModule,
     StudentModule,
+    AcademicProgramModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],

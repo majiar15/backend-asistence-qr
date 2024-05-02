@@ -26,14 +26,14 @@ export class GetAllCoursesUseCase {
 
 
     async getAllCourses(){
-        const data=await this.coursesDataSource.getAllCourses();
-        console.log("🚀 ~ GetAllCoursesUseCase ~ getAllCourses ~ data:", data)
-        this.coursesDb=data;
+        //const data=await this.coursesDataSource.getAllCourses();
+        //console.log("🚀 ~ GetAllCoursesUseCase ~ getAllCourses ~ data:", data)
+        //this.coursesDb=data;
         //this.courses=this.courses.
         //const schedule=await this.scheduleDataSource.getSchedule(course._id)
         //console.log("🚀 ~ GetAllCoursesUseCase ~ getAllCourses ~ schedule:", schedule)
-        console.log("🚀 ~ GET ALL COURSES ~ data:",  this.coursesDb)
-        this.response = {status:true,data: data}
+        //console.log("🚀 ~ GET ALL COURSES ~ data:",  this.coursesDb)
+        //this.response = {status:true,data: data}
         
     }
     async getSchedule(){
