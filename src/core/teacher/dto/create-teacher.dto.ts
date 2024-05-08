@@ -6,6 +6,9 @@ export class CreateTeacherDto {
     name:string;
 
     @IsNotEmpty()
+    surnames:string;
+
+    @IsNotEmpty()
     @IsNumber()
     @Min(100000)
     dni:number;

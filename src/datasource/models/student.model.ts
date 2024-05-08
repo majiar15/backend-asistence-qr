@@ -7,6 +7,9 @@ export class Student {
     
     @Prop({ required: true })
     name: string;
+
+    @Prop({ required: true })
+    surnames: string;
   
     @Prop({ required: true,unique:true })
     dni: number;

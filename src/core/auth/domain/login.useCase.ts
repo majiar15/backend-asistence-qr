@@ -69,6 +69,7 @@ export class LoginUseCase {
     const payload = {
       id: this.user._id,
       name: this.user.name,
+      surnames:this.user.surnames,
       email: this.user.email,
       role: this.user.role,
       dni: this.user.dni,

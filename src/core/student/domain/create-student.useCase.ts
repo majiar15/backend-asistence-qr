@@ -9,7 +9,6 @@ import * as bcrypt from 'bcrypt';
 export class CreateStudentUseCase {
 
     student: CreateStudentDto;
-    studentDb: StudentDocument;
 
 
     response: { status: boolean; data: Document<unknown, {}, any> & any & { _id: Types.ObjectId; }; }
@@ -58,9 +57,8 @@ export class CreateStudentUseCase {
     }
 
     async saveStudent() {
-        this.studentDb = await this.studentDataSource.saveStudent(this.student)
-
-        console.log("🚀 ~ STUDENT DB:", this.studentDb)
-        this.response = { status: true, data: this.studentDb }
+        const data= await this.studentDataSource.saveStudent(this.student)
+         data.set('password', undefined, { strict: false })
+        this.response = { status: true, data: data}
     }
 }

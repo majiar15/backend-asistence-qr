@@ -1,5 +1,5 @@
 
-import { Model, Document } from "mongoose";
+import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Student, StudentDocument } from "./models/student.model";
 import { CreateStudentDto } from "@core/student/dto/create-student.dto";
@@ -10,7 +10,7 @@ export class StudentDataSource {
         @InjectModel(Student.name) private student: Model<StudentDocument>,
     ) {}
 
-    async saveStudent(student:CreateStudentDto): Promise<StudentDocument>{
+    async saveStudent(student:CreateStudentDto){
         return await this.student.create(student)
     }
 
