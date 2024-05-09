@@ -1,10 +1,10 @@
 import { StudentDataSource } from "@datasource/student.datasource";
-
+import { Document, Types } from "mongoose";
 
 
 export class DeleteStudentUseCase {
 
-    response: { status: boolean; data: any; }
+    response: { status: boolean; data: Document<unknown, any, any> & any & { _id: Types.ObjectId; }; }
 
     constructor(private studentDatasource: StudentDataSource) { }
 
@@ -22,7 +22,10 @@ export class DeleteStudentUseCase {
     private async deleteStudent(id: string) {
 
         const data = await this.studentDatasource.deleteStudent(id);
-        this.response = { status: true, data };
-
+        if(data.delete){
+            this.response = { status: true, data:{deletedCount:1} };
+            return;
+        }
+        this.response = { status: false, data:{deletedCount:0} };
     }
 }

@@ -15,11 +15,11 @@ export class StudentDataSource {
     }
 
     getAllStudent(){
-        return this.student.find({}).select('-password');
+        return this.student.find({delete: false }).select('-password');
     }
 
     getStudent(dni){
-        return this.student.findOne({dni}).select('-password');;
+        return this.student.findOne({dni,delete: false }).select('-password');;
     }
 
     getStudentById(id:string){
@@ -31,6 +31,6 @@ export class StudentDataSource {
     }
 
     deleteStudent(id){
-        return this.student.deleteOne({_id:id})
+        return this.student.findByIdAndUpdate(id,{delete:true},{ new: true })
     }
 }

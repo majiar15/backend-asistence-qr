@@ -1,4 +1,3 @@
-import { StudentDocument } from "@datasource/models/student.model";
 import { CreateStudentDto } from "../dto/create-student.dto";
 import { Document, Types } from "mongoose";
 import { StudentDataSource } from "@datasource/student.datasource";
@@ -11,7 +10,7 @@ export class CreateStudentUseCase {
     student: CreateStudentDto;
 
 
-    response: { status: boolean; data: Document<unknown, {}, any> & any & { _id: Types.ObjectId; }; }
+    response: { status: boolean; data: Document<unknown, any, any> & any & { _id: Types.ObjectId; }; }
 
     constructor(private studentDataSource: StudentDataSource) { }
 

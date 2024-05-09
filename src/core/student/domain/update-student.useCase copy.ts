@@ -7,8 +7,8 @@ import { UpdateStudentDto } from "../dto/update-student.dto";
 
 export class UpdateStudentUseCase {
 
-    studentDb!: Document<unknown, {}, Student> & Student & { _id: Types.ObjectId; };
-    response: { status: boolean; data: Document<unknown, {}, Student> & Student & { _id: Types.ObjectId; }; }
+    studentDb!: Document<unknown, any, Student> & Student & { _id: Types.ObjectId; };
+    response: { status: boolean; data: Document<unknown, any, Student> & Student & { _id: Types.ObjectId; }; }
     dataUpdate: any;
     id: string = "";
     constructor(private studentDatasource: StudentDataSource) { }
