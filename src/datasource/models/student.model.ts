@@ -28,6 +28,9 @@ export class Student {
 
     @Prop({ required: true })
     password: string;
+
+    @Prop({default:false})
+    delete: boolean;
 }
 
 export type StudentDocument = Student & Document;

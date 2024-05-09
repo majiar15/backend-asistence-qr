@@ -16,11 +16,11 @@ export class UserDataSource {
     }
 
     getAllUser(role:string){
-        return this.users.find({role}).select('-password');
+        return this.users.find({role,delete:false}).select('-password');
     }
 
     getUserById(id:string){
-        return this.users.findById(id).select('-password');
+        return this.users.findOne({ _id: id, delete: false }).select('-password');
     }
 
  
@@ -29,6 +29,6 @@ export class UserDataSource {
     }
 
     deleteUser(id:string){
-        return this.users.deleteOne({_id:id})
+        return this.users.findByIdAndUpdate(id,{delete:true},{ new: true })
     }
 }

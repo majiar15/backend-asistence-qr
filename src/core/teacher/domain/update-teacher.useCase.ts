@@ -7,8 +7,8 @@ import { Document, Types } from "mongoose";
 
 export class UpdateTeachersUseCase {
 
-    teacherFromDB!: Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; };
-    response: { status: boolean; data: Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; }; }
+    teacherFromDB!: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; };
+    response: { status: boolean; data: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }; }
     dataUpdate: any;
     id: string = "";
     constructor(private userDatasource: UserDataSource) { }

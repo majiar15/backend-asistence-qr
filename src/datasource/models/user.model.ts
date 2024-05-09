@@ -22,6 +22,8 @@ export class Users {
   @Prop({ required: true })
   password: string;
 
+  @Prop({default:false})
+  delete: boolean;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(Users);

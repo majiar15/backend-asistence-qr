@@ -7,7 +7,7 @@ import { Document, Types } from "mongoose";
 
 export class GetOneTeacherUseCase {
 
-    response: { status: boolean; data: (Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; }); }
+    response: { status: boolean; data: (Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }); }
 
     constructor(private userDatasource: UserDataSource) { }
 

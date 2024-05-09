@@ -19,6 +19,9 @@ export class Schedule {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true })
   course_id: string; // Referencia al ID del curso
+
+  @Prop({default:false})
+  delete: boolean;
 }
 
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);

@@ -22,7 +22,12 @@ export class DeleteTeacherUseCase {
     private async deleteTeacher(id:string) {
         
         const data = await this.userDatasource.deleteUser(id);
-        this.response = { status: true, data };
+        if(data.delete){
+            this.response = { status: true, data:{deletedCount:1} };
+            return;
+        }
+        this.response = { status: false, data:{deletedCount:0} };
+        
 
     }
 }
