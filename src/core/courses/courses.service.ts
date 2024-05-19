@@ -5,6 +5,7 @@ import { CreateCoursesUseCase } from './domain/create-courses.useCase';
 import { CoursesDataSource } from '@datasource/course.datasource';
 import { ScheduleDataSource } from '@datasource/schedule.datasource';
 import { GetAllCoursesUseCase } from './domain/get-all-courses.useCase';
+import { UpdateCoursesUseCase } from './domain/update-courses.useCse';
 
 @Injectable()
 export class CoursesService {
@@ -30,9 +31,10 @@ export class CoursesService {
     try {
       
       const courseUseCase = new GetAllCoursesUseCase(this.courseModel, this.scheduleModel)
+
       const data = courseUseCase.main();
-    
       return data
+
     } catch (error) {
       throw error;
     }
@@ -42,9 +44,17 @@ export class CoursesService {
     return `This action returns a #${id} course`;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    console.log("🚀 ~ CoursesService ~ update ~ updateCourseDto:", updateCourseDto)
-    return `This action updates a #${id} course`;
+  update(id: string, updateCourseDto: UpdateCourseDto) {
+    try {
+      
+      const courseUseCase = new UpdateCoursesUseCase(this.courseModel, this.scheduleModel)
+
+      const data = courseUseCase.main(id,updateCourseDto);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
   }
 
   remove(id: number) {

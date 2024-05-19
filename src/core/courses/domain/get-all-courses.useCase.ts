@@ -1,14 +1,14 @@
 import { CoursesDataSource } from "@datasource/course.datasource";
 import { Courses } from "@datasource/models/course.model";
 import { ScheduleDataSource } from "@datasource/schedule.datasource";
-import { Types, Document } from "mongoose";
+import { NotFoundException } from "@nestjs/common";
 
 
 export class GetAllCoursesUseCase {
 
     coursesDb:Courses[];
 
-    response: { status: boolean; data: Document<unknown, {}, any> & any & { _id: Types.ObjectId; }; }
+    response: { status: boolean; data: any }
 
     constructor(private coursesDataSource: CoursesDataSource, private scheduleDataSource: ScheduleDataSource){}
 
@@ -16,6 +16,7 @@ export class GetAllCoursesUseCase {
 
         try {
             await this.getAllCourses()
+
             return this.response;
         } catch (error) {
             throw error;
@@ -26,17 +27,16 @@ export class GetAllCoursesUseCase {
 
 
     async getAllCourses(){
-        //const data=await this.coursesDataSource.getAllCourses();
-        //console.log("🚀 ~ GetAllCoursesUseCase ~ getAllCourses ~ data:", data)
-        //this.coursesDb=data;
-        //this.courses=this.courses.
-        //const schedule=await this.scheduleDataSource.getSchedule(course._id)
-        //console.log("🚀 ~ GetAllCoursesUseCase ~ getAllCourses ~ schedule:", schedule)
-        //console.log("🚀 ~ GET ALL COURSES ~ data:",  this.coursesDb)
-        //this.response = {status:true,data: data}
+        const data=await this.coursesDataSource.getAllCourses();
+        if(data.length){
+            this.response = {
+                status:true,
+                data:data
+            }
+            return;
+        }
+        throw new NotFoundException('COURSES NOT FOUND');
         
     }
-    async getSchedule(){
-       
-    }
+
 }

@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 
-export type ScheduleDocument = Schedule & Document;
 
 @Schema({versionKey:false})
 export class Schedule {
@@ -18,10 +17,12 @@ export class Schedule {
   room:string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true })
-  course_id: string; // Referencia al ID del curso
+  course_id: Types.ObjectId; // Referencia al ID del curso
 
-  @Prop({default:false})
+  @Prop({default:false,select: false})
   delete: boolean;
 }
+
+export type ScheduleDocument = Schedule & Document;
 
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);

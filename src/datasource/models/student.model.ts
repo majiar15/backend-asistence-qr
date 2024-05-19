@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 
 @Schema({versionKey:false})
@@ -21,7 +21,7 @@ export class Student {
     role: string;
 
     @Prop({  required: true, type: mongoose.Schema.Types.ObjectId, ref: 'AcademicProgram', })
-    academic_program_id:string;
+    academic_program_id:Types.ObjectId;
 
     @Prop({ required: true,unique:true })
     email: string;
@@ -29,7 +29,7 @@ export class Student {
     @Prop({ required: true })
     password: string;
 
-    @Prop({default:false})
+    @Prop({default:false,select: false})
     delete: boolean;
 }
 

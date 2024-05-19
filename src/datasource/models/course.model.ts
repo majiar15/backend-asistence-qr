@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 
 
 @Schema({versionKey:false})
@@ -10,7 +10,7 @@ export class Courses extends Document {
     name:string;
 
     @Prop({ required:true, type: mongoose.Schema.Types.ObjectId,ref: 'Teacher',})
-    teacher_id :string;
+    teacher_id :Types.ObjectId;
 
     @Prop()
     date_start:string;
@@ -22,12 +22,12 @@ export class Courses extends Document {
     description:string;
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student'}]})
-    students_ids:string;
+    students_ids:Types.ObjectId[];;
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Schedule'}]})
-    schedules_ids:string;
+    schedules_ids:Types.ObjectId[];
 
-    @Prop()
+    @Prop({ default: false,select: false })
     delete:boolean;
 
 }

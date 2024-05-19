@@ -1,4 +1,4 @@
-import { Document, Model } from "mongoose";
+import { Model } from "mongoose";
 import { Courses, CoursesDocument } from "./models/course.model";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateCourseDto } from "@core/courses/dto/create-course.dto";
@@ -13,15 +13,25 @@ export class CoursesDataSource {
         private schedule: Model<ScheduleDocument>
     ) {}
 
-    async saveCourse(course: Omit<CreateCourseDto, "schedules">): Promise<Document<Courses>>{
+    async saveCourse(course: Omit<CreateCourseDto, "schedules">):Promise<CoursesDocument>{
         return await this.courses.create(course);
     }
 
-    async getCourses(course: Omit<CreateCourseDto, "schedules">){
+    async getCourses(course: Omit<CreateCourseDto, "schedules">):Promise<CoursesDocument>{
         return await this.courses.findOne(course);
     }
 
-    async getAllCourses(): Promise<Courses[]>{
-        return await this.courses.find().populate('schedule','',this.schedule);
+    async getCourseById(id:string):Promise<CoursesDocument>{
+        return await this.courses.findById(id);
+    }
+
+    async getAllCourses(){
+        return await this.courses
+        .find()
+        .populate('schedules_ids') // Nombre del campo de referencia en el modelo Course
+        .exec();
+    }
+    async updateCourses(id:string,data:any): Promise<Courses[]>{
+        return await this.courses.findByIdAndUpdate(id,data,{ new: true }) 
     }
 }

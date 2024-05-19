@@ -22,7 +22,7 @@ export class Users {
   @Prop({ required: true })
   password: string;
 
-  @Prop({default:false})
+  @Prop({default:false,select: false})
   delete: boolean;
 }
 

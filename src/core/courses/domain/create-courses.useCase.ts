@@ -1,19 +1,22 @@
 import { CoursesDataSource } from "@datasource/course.datasource";
-import { Courses } from "@datasource/models/course.model";
-import { Document, Types } from "mongoose";
+import { CoursesDocument } from "@datasource/models/course.model";
 import { CreateCourseDto } from "../dto/create-course.dto";
 import { ScheduleDataSource } from "@datasource/schedule.datasource";
 import { BadRequestException } from "@nestjs/common";
+import { ScheduleDocument } from "@datasource/models/schedule.model";
 
 export class CreateCoursesUseCase {
 
-    course: Omit<CreateCourseDto, "schedules">;
-    courseDb: Document<Courses>
-    schedules: Array<any>;
+    private course: Omit<CreateCourseDto, "schedules">;
+    private courseDb: CoursesDocument;
+    private schedules: Array<any>;
+    private schedulesDb:ScheduleDocument[];
+    private response: { status: boolean; data: any }
 
-    response: { status: boolean; data: Document<unknown, {}, any> & any & { _id: Types.ObjectId; }; }
-
-    constructor(private coursesDataSource: CoursesDataSource, private scheduleDataSource: ScheduleDataSource) { }
+    constructor(
+        private coursesDataSource: CoursesDataSource, 
+        private scheduleDataSource: ScheduleDataSource
+    ) { }
 
     async main(courseObject: CreateCourseDto) {
 
@@ -21,12 +24,14 @@ export class CreateCoursesUseCase {
             //Separa data de course y horarios
             this.subtractDataBody(courseObject);
 
-            await this.getCourse()
+            await this.checkCourseExists()
+
             await this.saveCourse()
 
-            this.addCourseIdASchedules();
+            await this.saveSchedulesWithCourseId();
 
-            await this.saveSchedule();
+            await this.updateCourseWithSchedules();
+
         } catch (error) {
             throw error;
         }
@@ -42,33 +47,49 @@ export class CreateCoursesUseCase {
 
     }
 
-    async getCourse() {
-        const coourse = await this.coursesDataSource.getCourses(this.course)
-        if(coourse){
+    private async checkCourseExists() {
+        const course = await this.coursesDataSource.getCourses(this.course)
+        if(course){
             throw new BadRequestException("Ya existe el curso a crear")
         }
     }
-    async saveCourse() {
-        const data = await this.coursesDataSource.saveCourse(this.course)
-        this.courseDb = data;
+
+    private async saveCourse() {
+        this.courseDb = await this.coursesDataSource.saveCourse(this.course);
     }
 
-    addCourseIdASchedules() {
+    private async saveSchedulesWithCourseId() {
         this.schedules.forEach(schedule => {
             schedule.course_id = this.courseDb._id;
         });
+
+        this.schedulesDb = await this.scheduleDataSource.saveSchedule(this.schedules)
     }
 
-    async saveSchedule() {
-        console.log("🚀 ~ Schedules:", this.schedules)
-        const data = await this.scheduleDataSource.saveSchedule(this.schedules)
+    private async updateCourseWithSchedules(){
 
-       const updatedCourse = {
-            _id: this.courseDb._id,
-            ...this.course,
-            schedules: data
+        if (!this.courseDb.schedules_ids) {
+            this.courseDb.schedules_ids = [];
+          }
+
+        //Agrega los IDs de los horarios al curso
+        this.schedulesDb.forEach(element => {
+            this.courseDb.schedules_ids.push(element._id)
+        });
+        const updatedCourse = await this.coursesDataSource.updateCourses(this.courseDb._id,this.courseDb);
+        console.log("🚀 ~ CreateCoursesUseCase ~ updateCourse ~ data:", updatedCourse)
+
+        // Construye la respuesta final
+        this.response = {
+            status:true,
+            data:{
+                _id: this.courseDb._id,
+                ...this.course,
+                schedules: this.schedulesDb
+            }
+            
         };
         console.log("🚀 ~ GUARDAR HORARIOS:", updatedCourse)
-        this.response ={status:true,data:updatedCourse};
+
     }
 }
