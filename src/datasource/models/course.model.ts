@@ -9,7 +9,7 @@ export class Courses extends Document {
     @Prop({ required: true })
     name:string;
 
-    @Prop({ required:true, type: mongoose.Schema.Types.ObjectId,ref: 'Teacher',})
+    @Prop({ required:true, type: mongoose.Schema.Types.ObjectId,ref: 'Users',})
     teacher_id :Types.ObjectId;
 
     @Prop()
@@ -21,8 +21,8 @@ export class Courses extends Document {
     @Prop()
     description:string;
 
-    @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student'}]})
-    students_ids:Types.ObjectId[];;
+    @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student',unique:true}]})
+    students_ids:Types.ObjectId[];
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Schedule'}]})
     schedules_ids:Types.ObjectId[];
