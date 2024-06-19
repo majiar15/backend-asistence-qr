@@ -15,15 +15,24 @@ export class StudentDataSource {
     }
 
     getAllStudent(){
-        return this.student.find({delete: false }).select('-password');
+        return this.student.find({delete: false })
+        .populate(['academic_program'])
+        .select('-password')
+        .exec();;
     }
 
     getStudent(dni){
-        return this.student.findOne({dni,delete: false }).select('-password');;
+        return this.student.findOne({dni,delete: false })
+        .populate(['academic_program'])
+        .select('-password')
+        .exec();
     }
 
     getStudentById(id:string){
-        return this.student.findById(id).select('-password');
+        return this.student.findById(id).populate(['academic_program'])
+        .select('-password')
+        .exec();
+        
     }
 
     updateStudent(id:string,data){
@@ -32,5 +41,12 @@ export class StudentDataSource {
 
     deleteStudent(id){
         return this.student.findByIdAndUpdate(id,{delete:true},{ new: true })
+    }
+
+    async getStudentByName(query:any):Promise<StudentDocument[]>{
+        return this.student.find(query)
+        .populate(['academic_program'])
+        .select('-password')
+        .exec();
     }
 }

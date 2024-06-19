@@ -7,6 +7,7 @@ import { GetAllStudentUseCase } from './domain/get-all-student.useCase';
 import { GetOneStudentUseCase } from './domain/get-one-student.useCase';
 import { UpdateStudentUseCase } from './domain/update-student.useCase copy';
 import { DeleteStudentUseCase } from './domain/delete-student.useCase';
+import { SearchStudentUseCase } from './domain/search-student.useCase';
 
 @Injectable()
 export class StudentService {
@@ -49,6 +50,19 @@ export class StudentService {
       throw error;
     }
 
+  }
+
+  findCoursesByName(name: string) {
+    
+    try {
+
+      const studentUseCase = new SearchStudentUseCase(this.studentModel)
+      const data = studentUseCase.main(name);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: string, updateStudentDto: UpdateStudentDto) {

@@ -16,7 +16,7 @@ export class GetOneStudentUseCase {
 
         try {
 
-            await this.getOneTeacher(id);
+            await this.getOneStudent(id);
             return this.response;
 
         } catch (error) {
@@ -25,7 +25,7 @@ export class GetOneStudentUseCase {
 
     }
 
-    private async getOneTeacher(id: string) {
+    private async getOneStudent(id: string) {
 
         const data = await this.studentDatasource.getStudentById(id);
 

@@ -11,6 +11,7 @@ import { AdminModule } from '@core/admin/admin.module';
 import { StudentModule } from './core/student/student.module';
 import { AcademicProgramModule } from './core/academic_program/academic_program.module';
 import { AssistanceModule } from '@core/assistance/assistance.module';
+import { EnrollModule } from './core/enroll/enroll.module';
 
 
 
@@ -27,6 +28,8 @@ import { AssistanceModule } from '@core/assistance/assistance.module';
     StudentModule,
     AcademicProgramModule,
     AssistanceModule,
+    EnrollModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],
