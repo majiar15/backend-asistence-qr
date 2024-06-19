@@ -21,12 +21,13 @@ export class CreateCoursesUseCase {
     async main(courseObject: CreateCourseDto) {
 
         try {
+            await this.saveCourse()
+            return;
             //Separa data de course y horarios
             this.subtractDataBody(courseObject);
 
             await this.checkCourseExists()
 
-            await this.saveCourse()
 
             await this.saveSchedulesWithCourseId();
 
@@ -55,6 +56,13 @@ export class CreateCoursesUseCase {
     }
 
     private async saveCourse() {
+        this.course = {
+            date_end: new Date(),
+            date_start: new Date(),
+            description: 'adsasd',
+            name: 'asdasd',
+            teacher_id: "664915f1d39720f28cd01c97"
+        }
         this.courseDb = await this.coursesDataSource.saveCourse(this.course);
     }
 

@@ -10,10 +10,10 @@ export class CreateCourseDto {
     teacher_id :string;
 
     @IsNotEmpty()
-    date_start:string;
+    date_start:Date;
 
     @IsNotEmpty()
-    date_end:string;
+    date_end:Date;
 
     description:string;
 

@@ -13,10 +13,10 @@ export class Courses extends Document {
     teacher_id :Types.ObjectId;
 
     @Prop()
-    date_start:string;
+    date_start:Date;
 
     @Prop()
-    date_end:string;
+    date_end:Date;
 
     @Prop()
     description:string;

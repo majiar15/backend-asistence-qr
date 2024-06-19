@@ -12,6 +12,8 @@ import { AcademicProgram, AcademicProgramSchema } from './models/academic_progra
 import { AcademicProgramDataSource } from './academic_program.datasource';
 import { Student, StudentsSchema } from './models/student.model';
 import { StudentDataSource } from './student.datasource';
+import { AssistanceDataSource } from './assistance.datasource';
+import { Assistance,AssistanceSchema } from './models/assistance.model';
 
 
 
@@ -23,23 +25,26 @@ import { StudentDataSource } from './student.datasource';
         MongooseModule.forFeature([{ name: Secret.name, schema: SecretSchema }]),
         MongooseModule.forFeature([{ name: AcademicProgram.name, schema: AcademicProgramSchema }]),
         MongooseModule.forFeature([{ name: Student.name, schema: StudentsSchema }]),
+        MongooseModule.forFeature([{ name: Assistance.name, schema: AssistanceSchema }]),
     ],
     controllers: [],
-    exports: [ 
+    exports: [
         UserDataSource,
         CoursesDataSource,
-        ScheduleDataSource, 
+        ScheduleDataSource,
         SecretDataSource,
         AcademicProgramDataSource,
         StudentDataSource,
+        AssistanceDataSource,
     ],
-    providers: [ 
+    providers: [
         UserDataSource,
         CoursesDataSource,
-        ScheduleDataSource, 
+        ScheduleDataSource,
         SecretDataSource,
         AcademicProgramDataSource,
-        StudentDataSource
+        StudentDataSource,
+        AssistanceDataSource
     ]
 })
 export class dataSourceModule { }
