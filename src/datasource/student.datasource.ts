@@ -43,8 +43,8 @@ export class StudentDataSource {
         return this.student.findByIdAndUpdate(id,{delete:true},{ new: true })
     }
 
-    async getStudentByName(name:string):Promise<StudentDocument[]>{
-        return this.student.find({name:new RegExp(name, 'i')})
+    async getStudentByName(query:any):Promise<StudentDocument[]>{
+        return this.student.find(query)
         .populate(['academic_program'])
         .select('-password')
         .exec();

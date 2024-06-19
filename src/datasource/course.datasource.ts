@@ -29,13 +29,22 @@ export class CoursesDataSource {
     }
 
     async getCourseById(id:string):Promise<CoursesDocument>{
-        return await this.courses.findById(id).populate(['schedules_ids','teacher_id']);
+        return await this.courses.findById(id).populate(['schedules_ids','teacher_id']).select('-students_ids');
+    }
+
+    async getCourseWithEnrolledStudents(id:string):Promise<CoursesDocument>{
+        return await this.courses.findById(id).populate({
+            path: 'students_ids',
+            select: '-password',
+            populate: { path: 'academic_program' }
+          }).lean().exec();
     }
 
     async getAllCourses(){
         return await this.courses
         .find()
-        .populate('schedules_ids') // Nombre del campo de referencia en el modelo Course
+        .populate('schedules_ids')
+        .select('-students_ids') // Nombre del campo de referencia en el modelo Course
         .exec();
     }
     async updateCourses(id:string,data:any): Promise<Courses[]>{
