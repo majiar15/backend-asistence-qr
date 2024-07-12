@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put, Query } from '@nestjs/common';
 import { TeacherService } from './teacher.service';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { RolesGuard } from '@common/guards/roles/roles.guard';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/utils/rol.enum';
+import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
+import { Users } from '@datasource/models/user.model';
+import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
 
 
 @Controller('teachers')
@@ -20,8 +23,8 @@ export class TeacherController {
 
   @Get()
   @Roles(Role.Admin)
-  getAllTeachers() {
-    return this.teacherService.getAllTeachers();
+  getAllTeachers(@Query() query:PaginationQueryParamsDto):Promise<ResponseDto<Users>> {
+    return this.teacherService.getAllTeachers(query);
   }
 
   @Get(':id')

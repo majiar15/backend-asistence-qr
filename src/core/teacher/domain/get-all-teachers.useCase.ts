@@ -1,19 +1,21 @@
+import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
+import { PaginationQueryParamsDto } from "@common/utils/pagination/dto/pagination-query-params.dto";
 import { Users } from "@datasource/models/user.model";
 import { UserDataSource } from "@datasource/user.datasource";
-import { Document, Types } from "mongoose";
 
 
 
 export class GetAllTeacherUseCase {
 
-    response: { status: boolean; data: (Document<unknown, any, Users> & Users & { _id: Types.ObjectId; })[]; }
+    response: ResponseDto<Users>;
 
     constructor(private userDatasource: UserDataSource) { }
 
 
-    public async main() {
+    public async main(query:PaginationQueryParamsDto):Promise<ResponseDto<Users>> {
         try {
-            await this.getAllTeacher()
+   
+            await this.getAllTeacher(query)
             return this.response;
 
         } catch (error) {
@@ -21,10 +23,13 @@ export class GetAllTeacherUseCase {
         }
     }
 
-    private async getAllTeacher() {
+    private async getAllTeacher(query:PaginationQueryParamsDto) {
         
-        const data = await this.userDatasource.getAllUser('teacher');
-        this.response = { status: true, data };
+        const { page, limit} = query;
+        const data = await this.userDatasource.getAllUser('teacher',page, limit);
+    
+        const itemCount = await this.userDatasource.getUserCount('teacher');
 
+        this.response= new ResponseDto<any>(true,data, page, limit, itemCount)
     }
 }

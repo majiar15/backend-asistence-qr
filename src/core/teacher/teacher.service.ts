@@ -7,6 +7,7 @@ import { GetAllTeacherUseCase } from './domain/get-all-teachers.useCase';
 import { GetOneTeacherUseCase } from './domain/get-one-teacher.useCase';
 import { UpdateTeachersUseCase } from './domain/update-teacher.useCase';
 import { DeleteTeacherUseCase } from './domain/delete-teacher.useCase';
+import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
 
 @Injectable()
 export class TeacherService {
@@ -27,12 +28,12 @@ export class TeacherService {
     }
   }
 
-  async getAllTeachers() {
+  async getAllTeachers(query:PaginationQueryParamsDto) {
 
     try {
       const teacherUseCase = new GetAllTeacherUseCase(this.userModel)
     
-      const data = await teacherUseCase.main()
+      const data = await teacherUseCase.main(query)
       return data;
 
     } catch (error) {

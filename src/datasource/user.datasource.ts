@@ -15,14 +15,20 @@ export class UserDataSource {
         return this.users.create(user);
     }
 
-    getAllUser(role:string){
-        return this.users.find({role,delete:false}).select('-password');
+    getAllUser(role:string,page: number, limit: number){
+        return this.users.find({role,delete:false})
+            .select('-password')
+            .limit(limit)
+            .skip((page -1) * limit);
     }
 
     getUserById(id:string){
         return this.users.findOne({ _id: id, delete: false }).select('-password');
     }
 
+    getUserCount(role:string){
+        return this.users.countDocuments({role, delete: false })
+    }
  
     updateUser(id:string,data){
         return this.users.findByIdAndUpdate(id,data,{ new: true }) 

@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { RolesGuard } from '@common/guards/roles/roles.guard';
 import { SecretKey } from '@common/decorators/secret-key.decorator';
+import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
+import { Users } from '@datasource/models/user.model';
+import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
 
 
 @Controller('admins')
@@ -19,8 +22,8 @@ export class AdminController {
 
   @Get()
   @SecretKey()
-  getAllAdmins() {
-    return this.adminService.getAllAdmins();
+  getAllAdmins(@Query() query:PaginationQueryParamsDto):Promise<ResponseDto<Users>> {
+    return this.adminService.getAllAdmins(query);
   }
 
   @Get(':id')

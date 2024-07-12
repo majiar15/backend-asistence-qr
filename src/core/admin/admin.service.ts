@@ -7,6 +7,9 @@ import { GetAllAdminUseCase } from './domain/get-all-admin.useCase';
 import { GetOneAdminUseCase } from './domain/get-one-admin.useCase';
 import { UpdateAdminUseCase } from './domain/update-admin.useCase';
 import { DeleteAdminUseCase } from './domain/delete-admin.useCase';
+import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
+import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
+import { Users } from '@datasource/models/user.model';
 
 @Injectable()
 export class AdminService {
@@ -27,12 +30,12 @@ export class AdminService {
     }
   }
 
-  async getAllAdmins() {
+  async getAllAdmins(query:PaginationQueryParamsDto):Promise<ResponseDto<Users>> {
 
     try {
       const adminUseCase = new GetAllAdminUseCase(this.userModel)
     
-      const data = await adminUseCase.main()
+      const data = await adminUseCase.main(query)
       return data;
 
     } catch (error) {
