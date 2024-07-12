@@ -9,6 +9,10 @@ import { UpdateCoursesUseCase } from './domain/update-courses.useCse';
 import { getCoursesTeacherUseCase } from './domain/get-course-teacher.useCase';
 import { SearchCoursesUseCase } from './domain/search-courses.useCase';
 import { GetOneCourses } from './domain/get-one-courses.useCase';
+import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
+import { SearchQueryParamsDto } from './dto/search-course.dto';
+import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
+import { CoursesDocument } from '@datasource/models/course.model';
 
 @Injectable()
 export class CoursesService {
@@ -29,13 +33,13 @@ export class CoursesService {
 
   }
 
-  findAll() {
+  findAll(query:PaginationQueryParamsDto):Promise<ResponseDto<CoursesDocument>> {
 
     try {
       
       const courseUseCase = new GetAllCoursesUseCase(this.courseModel, this.scheduleModel)
 
-      const data = courseUseCase.main();
+      const data = courseUseCase.main(query);
       return data
 
     } catch (error) {
@@ -43,12 +47,12 @@ export class CoursesService {
     }
   }
 
-  findCoursesByName(name: string) {
+  findCoursesByName(query:SearchQueryParamsDto):Promise<ResponseDto<CoursesDocument>> {
     
     try {
 
       const courseUseCase = new SearchCoursesUseCase(this.courseModel)
-      const data = courseUseCase.main(name);
+      const data = courseUseCase.main(query);
       return data
 
     } catch (error) {
@@ -85,11 +89,11 @@ export class CoursesService {
     return `This action removes a #${id} course`;
   }
 
-  getCoursesTeacher(teacherId: string){
+  getCoursesTeacher(teacherId: string,query:PaginationQueryParamsDto){
     try {
       
       const courseUseCase = new getCoursesTeacherUseCase(this.courseModel)
-      const data = courseUseCase.main(teacherId);
+      const data = courseUseCase.main(teacherId,query);
       return data
 
     } catch (error) {

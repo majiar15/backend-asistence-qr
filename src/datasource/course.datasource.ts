@@ -22,24 +22,29 @@ export class CoursesDataSource {
         return await this.courses.findOne(course).select('-students_ids');
     }
 
-    async getCoursesByName(name:string):Promise<CoursesDocument[]>{
-        return await this.courses.find({name:new RegExp(name, 'i')})
+    async getCoursesByName(name:string,page?: number, limit?: number):Promise<CoursesDocument[]>{
+        return await this.courses.find({name:new RegExp(name, 'i'),delete: false })
         .populate(['schedules_ids','teacher_id']) // Nombre del campo de referencia en el modelo Course
         .select('-students_ids')
+        .limit(limit)
+        .skip((page -1) * limit)
         .exec();
+    }
+    async getCoursesByNameCount(name:string){
+        return await this.courses.countDocuments({name, delete: false });
     }
 
     async getCourseById(id:string):Promise<CoursesDocument>{
-        return await this.courses.findById(id).populate(['schedules_ids','teacher_id']).select('-students_ids');
+        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules_ids','teacher_id']).select('-students_ids');
     }
 
 
     async getCourseByIdIncludeStudents(id:string):Promise<CoursesDocument>{
-        return await this.courses.findById(id).populate(['schedules_ids','teacher_id']);
+        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules_ids','teacher_id']);
     }
 
     async getCourseWithEnrolledStudents(id:string,page?: number, limit?: number):Promise<CoursesDocument>{
-        return await this.courses.findById(id).populate({
+        return await this.courses.findOne({_id:id, delete: false }).populate({
             path: 'students_ids',
             select: '-password',
             populate: { path: 'academic_program' },
@@ -48,26 +53,35 @@ export class CoursesDataSource {
     }
 
     async getCourseWithEnrolledStudentsCount(id:string):Promise<CoursesDocument>{
-        return await this.courses.findById(id).exec()
+        return await this.courses.findOne({_id:id, delete: false }).exec()
     }
 
     async getCourseCount(){
         return await this.courses.countDocuments({ delete: false });
     }
 
-    async getAllCourses(){
+    async getAllCourses(page: number, limit: number):Promise<CoursesDocument[]>{
         return await this.courses
-        .find()
+        .find({delete: false })
         .populate('schedules_ids')
         .select('-students_ids') // Nombre del campo de referencia en el modelo Course
+        .limit(limit)
+        .skip((page -1) * limit)
         .exec();
     }
     async updateCourses(id:string,data:any): Promise<Courses[]>{
         return await this.courses.findByIdAndUpdate(id,data,{ new: true })
     }
 
-    async getCoursesByTeacher(teacherId: string ){
-        console.log({ teacher_id: teacherId});
-        return await this.courses.find({ teacher_id: teacherId}, "_id, name")
+    async getCoursesByTeacher(teacherId: string,page: number, limit: number ){
+        return await this.courses.find({ teacher_id: teacherId,delete: false }, "_id, name")
+        .limit(limit)
+        .skip((page -1) * limit)
+        .exec();
+    }
+
+    async getCoursesByTeacherCount(teacherId: string ){
+        return await this.courses.find({ teacher_id: teacherId,delete: false }, "_id, name")
+        .countDocuments({delete:false})
     }
 }
