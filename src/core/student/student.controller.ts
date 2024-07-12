@@ -28,14 +28,14 @@ export class StudentController {
   }
   
   @Get('search')
-  search(@Query('name') name?: string, @Query('id') id?: string) {
+  search(@Query()query: StudentQueryParamsDto) {
 
-    if (name) {
+    if (query.name) {
       // Lógica para buscar por nombre
-      return this.studentService.findCoursesByName(name);
-    } else if (id) {
+      return this.studentService.findCoursesByName(query);
+    } else if (query.id) {
       // Lógica para buscar por ID
-      return this.studentService.findOne(id);
+      return this.studentService.findOne(query.id);
     } else {
       // Manejo de caso donde no se proporciona ni name ni id
       throw new BadRequestException('Por favor, proporciona un nombre o un ID para buscar el curso.')

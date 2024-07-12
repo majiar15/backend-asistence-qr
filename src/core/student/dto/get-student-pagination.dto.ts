@@ -1,10 +1,14 @@
-import { IsInt, IsNotEmpty, IsString, Max, Min } from "class-validator";
+import { IsInt, Max, Min } from "class-validator";
 import { Type } from "class-transformer";
 
 export class StudentQueryParamsDto {
-    @IsNotEmpty()
-    @IsString()
-    readonly course_id: string;
+    
+    readonly course_id?: string;
+
+    readonly name?: string;
+
+   
+    readonly id?: string;
     
     @Type(() => Number)
     @IsInt()

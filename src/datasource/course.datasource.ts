@@ -31,7 +31,7 @@ export class CoursesDataSource {
         .exec();
     }
     async getCoursesByNameCount(name:string){
-        return await this.courses.countDocuments({name, delete: false });
+        return await this.courses.countDocuments({name:new RegExp(name, 'i'), delete: false });
     }
 
     async getCourseById(id:string):Promise<CoursesDocument>{

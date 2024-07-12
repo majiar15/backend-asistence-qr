@@ -49,10 +49,16 @@ export class StudentDataSource {
         return this.student.findByIdAndUpdate(id,{delete:true},{ new: true })
     }
 
-    async getStudentByName(query:any):Promise<StudentDocument[]>{
+    async getStudentByName(query:any,page: number, limit: number):Promise<StudentDocument[]>{
         return this.student.find(query)
         .populate(['academic_program'])
         .select('-password')
+        .limit(limit)
+        .skip((page -1) * limit)
         .exec();
+    }
+
+    async getStudentByNameCount(query:any){
+        return this.student.countDocuments(query).exec();
     }
 }

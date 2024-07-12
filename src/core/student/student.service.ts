@@ -61,12 +61,12 @@ export class StudentService {
 
   }
 
-  findCoursesByName(name: string) {
+  findCoursesByName(query: StudentQueryParamsDto) {
     
     try {
 
       const studentUseCase = new SearchStudentUseCase(this.studentModel)
-      const data = studentUseCase.main(name);
+      const data = studentUseCase.main(query);
       return data
 
     } catch (error) {
