@@ -8,11 +8,20 @@ import { GetOneStudentUseCase } from './domain/get-one-student.useCase';
 import { UpdateStudentUseCase } from './domain/update-student.useCase copy';
 import { DeleteStudentUseCase } from './domain/delete-student.useCase';
 import { SearchStudentUseCase } from './domain/search-student.useCase';
-
+import { GetEnrolledStudentsUseCase } from './domain/get-enrolled-students.useCase';
+import { GetAllUnenrolledStudentsUseCase } from './domain/get-all-unenrolled-student.useCase';
+import { CoursesDataSource } from '@datasource/course.datasource';
+import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
+import { StudentDocument } from '@datasource/models/student.model';
+import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
+import { StudentQueryParamsDto } from './dto/get-student-pagination.dto';
 @Injectable()
 export class StudentService {
 
-  constructor(private readonly studentModel: StudentDataSource) { }
+  constructor(
+    private readonly studentModel: StudentDataSource,
+    private readonly courseModel: CoursesDataSource
+  ) { }
 
   async create(createStudentDto: CreateStudentDto) {
 
@@ -26,11 +35,11 @@ export class StudentService {
     }
   }
 
-  async findAll() {
+  async findAll(query:PaginationQueryParamsDto) {
 
     try {
       const studentUseCase = new GetAllStudentUseCase(this.studentModel)
-      const data = await studentUseCase.main();
+      const data = await studentUseCase.main(query);
       return data;
 
     } catch (error) {
@@ -85,6 +94,27 @@ export class StudentService {
       const data = await studentUseCase.main(id);
       return data;
 
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async getEnrolledStudents(query: StudentQueryParamsDto):Promise<ResponseDto<StudentDocument>>{
+    try {
+      const enrollUseCase = new GetEnrolledStudentsUseCase(this.courseModel)
+      const data = await enrollUseCase.main(query);
+      return data
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAllUnenrolledStudents(query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>>{
+    try {
+      const enrollUseCase = new GetAllUnenrolledStudentsUseCase(this.courseModel,this.studentModel)
+      const data = await enrollUseCase.main(query);
+      return data
     } catch (error) {
       throw error;
     }

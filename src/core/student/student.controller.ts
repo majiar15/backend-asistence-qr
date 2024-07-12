@@ -4,7 +4,12 @@ import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/utils/rol.enum';
-import { Types } from 'mongoose';
+import { ValidateObjectIdPipe } from '@common/pipes/validate-object-id.pipe';
+import { StudentQueryParamsDto } from './dto/get-student-pagination.dto';
+import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
+import { StudentDocument } from '@datasource/models/student.model';
+import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
+
 
 @Controller('students')
 export class StudentController {
@@ -18,15 +23,13 @@ export class StudentController {
 
   @Get()
   @Roles(Role.Admin)
-  findAll() {
-    return this.studentService.findAll();
+  findAll(@Query() query:PaginationQueryParamsDto): Promise<ResponseDto<StudentDocument>> {
+    return this.studentService.findAll(query);
   }
   
   @Get('search')
   search(@Query('name') name?: string, @Query('id') id?: string) {
-    console.log("🚀 ~ StudentController ~ search ~ id:", id)
-    console.log("🚀 ~ StudentController ~ search ~ search:",name)
-    
+
     if (name) {
       // Lógica para buscar por nombre
       return this.studentService.findCoursesByName(name);
@@ -40,11 +43,21 @@ export class StudentController {
    
   }
 
+  @Get('not-enrolled')
+  getAllUnenrolledStudents(@Query(ValidateObjectIdPipe) query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>>{
+
+    return this.studentService.getAllUnenrolledStudents(query)
+  }
+
+  @Get('enrolled')
+  getEnrolledStudents(@Query(ValidateObjectIdPipe) query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>>{
+  
+    return this.studentService.getEnrolledStudents(query)
+  }
+
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException('Invalid ID format');
-    }
+  async findOne(@Param('id',ValidateObjectIdPipe) id: string) {
+   
     const student = await this.studentService.findOne(id);
     if (!student) {
       throw new NotFoundException('Student not found');
@@ -64,4 +77,7 @@ export class StudentController {
   remove(@Param('id') id: string) {
     return this.studentService.remove(id);
   }
+
+
+ 
 }

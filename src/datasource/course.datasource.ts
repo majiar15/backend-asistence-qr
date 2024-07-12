@@ -32,12 +32,26 @@ export class CoursesDataSource {
         return await this.courses.findById(id).populate(['schedules_ids','teacher_id']).select('-students_ids');
     }
 
-    async getCourseWithEnrolledStudents(id:string):Promise<CoursesDocument>{
+
+    async getCourseByIdIncludeStudents(id:string):Promise<CoursesDocument>{
+        return await this.courses.findById(id).populate(['schedules_ids','teacher_id']);
+    }
+
+    async getCourseWithEnrolledStudents(id:string,page?: number, limit?: number):Promise<CoursesDocument>{
         return await this.courses.findById(id).populate({
             path: 'students_ids',
             select: '-password',
-            populate: { path: 'academic_program' }
-          }).lean().exec();
+            populate: { path: 'academic_program' },
+            options:{limit,skip:(page -1) * limit}
+          }).lean().exec()
+    }
+
+    async getCourseWithEnrolledStudentsCount(id:string):Promise<CoursesDocument>{
+        return await this.courses.findById(id).exec()
+    }
+
+    async getCourseCount(){
+        return await this.courses.countDocuments({ delete: false });
     }
 
     async getAllCourses(){

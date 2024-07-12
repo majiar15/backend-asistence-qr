@@ -1,0 +1,19 @@
+import { IsInt, IsNotEmpty, IsString, Max, Min } from "class-validator";
+import { Type } from "class-transformer";
+
+export class StudentQueryParamsDto {
+    @IsNotEmpty()
+    @IsString()
+    readonly course_id: string;
+    
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    readonly page: number = 1; // Ahora es obligatorio y tiene valor predeterminado
+
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    @Max(50)
+    readonly limit: number = 10;
+}

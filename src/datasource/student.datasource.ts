@@ -14,10 +14,12 @@ export class StudentDataSource {
         return await this.student.create(student)
     }
 
-    getAllStudent(){
+    getAllStudent(page: number, limit: number): Promise<StudentDocument[]>{
         return this.student.find({delete: false })
         .populate(['academic_program'])
         .select('-password')
+        .limit(limit)
+        .skip((page -1) * limit)
         .exec();;
     }
 
@@ -33,6 +35,10 @@ export class StudentDataSource {
         .select('-password')
         .exec();
         
+    }
+
+    getStudentsCount(){
+        return this.student.countDocuments({ delete: false })
     }
 
     updateStudent(id:string,data){

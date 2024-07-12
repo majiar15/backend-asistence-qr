@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body,} from '@nestjs/common';
 import { EnrollService } from './enroll.service';
 import { CreateEnrollDto } from './dto/create-enroll.dto';
 import { Role } from '@common/utils/rol.enum';
@@ -14,10 +14,4 @@ export class EnrollController {
     return this.enrollService.create(createEnrollDto);
   }
 
-  @Get(':id')
-  getEnrolledStudents(@Param('id') id: string){
-    return this.enrollService.getEnrolledStudents(id)
-    
-  }
-  
 }

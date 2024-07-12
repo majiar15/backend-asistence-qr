@@ -21,7 +21,7 @@ export class Courses extends Document {
     @Prop()
     description:string;
 
-    @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student',unique:true}]})
+    @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student'}]})
     students_ids:Types.ObjectId[];
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Schedule'}]})
