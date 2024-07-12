@@ -6,6 +6,7 @@ import { CoursesDataSource } from '@datasource/course.datasource';
 import { ScheduleDataSource } from '@datasource/schedule.datasource';
 import { GetAllCoursesUseCase } from './domain/get-all-courses.useCase';
 import { UpdateCoursesUseCase } from './domain/update-courses.useCse';
+import { getCoursesTeacherUseCase } from './domain/get-course-teacher.useCase';
 import { SearchCoursesUseCase } from './domain/search-courses.useCase';
 import { GetOneCourses } from './domain/get-one-courses.useCase';
 
@@ -82,5 +83,17 @@ export class CoursesService {
 
   remove(id: number) {
     return `This action removes a #${id} course`;
+  }
+
+  getCoursesTeacher(teacherId: string){
+    try {
+      
+      const courseUseCase = new getCoursesTeacherUseCase(this.courseModel)
+      const data = courseUseCase.main(teacherId);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
   }
 }

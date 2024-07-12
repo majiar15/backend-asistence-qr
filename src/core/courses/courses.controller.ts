@@ -4,6 +4,8 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { Roles } from '@common/decorators/roles.decorator';
 import { Role } from '@common/utils/rol.enum';
+import { Payload } from '@common/decorators/payload.decorator';
+import { IPayload } from '@common/interfaces/payload.interface';
 
 @Controller('courses')
 export class CoursesController {
@@ -16,8 +18,12 @@ export class CoursesController {
   }
 
   @Get()
-  @Roles(Role.Admin)
-  findAll() {
+  @Roles(Role.Admin, Role.Teacher)
+  findAll(@Payload() payload: IPayload) {
+    if (payload.role === Role.Teacher) {
+      return this.coursesService.getCoursesTeacher(payload.id);
+    }
+
     return this.coursesService.findAll();
   }
 
