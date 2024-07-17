@@ -21,7 +21,12 @@ import { EnrollModule } from './core/enroll/enroll.module';
       isGlobal: true,
     }),
     AuthModule,
-    MongooseModule.forRoot(EnvConfiguration().db_uri),
+    MongooseModule.forRoot(EnvConfiguration().db_uri,{
+      dbName: 'Unilibre', // Aquí especificas el nombre de tu base de datos personalizado
+      
+      retryWrites: true,
+      w: 'majority',
+    }),
     TeacherModule,
     CoursesModule,
     AdminModule,

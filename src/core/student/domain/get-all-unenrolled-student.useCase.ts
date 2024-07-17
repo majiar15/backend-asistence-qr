@@ -50,7 +50,7 @@ export class GetAllUnenrolledStudentsUseCase {
             throw new NotFoundException('COURSES NOT FOUND');
         }
         
-        this.enrollStudentsSet = new Set<string>(course.students_ids.map((item: any) => item._id.toHexString()));
+        this.enrollStudentsSet = new Set<string>(course.students.map((item: any) => item._id.toHexString()));
         
     }
 

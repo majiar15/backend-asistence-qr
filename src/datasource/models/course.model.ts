@@ -22,10 +22,10 @@ export class Courses extends Document {
     description:string;
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student'}]})
-    students_ids:Types.ObjectId[];
+    students:Types.ObjectId[];
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Schedule'}]})
-    schedules_ids:Types.ObjectId[];
+    schedules:Types.ObjectId[];
 
     @Prop({ default: false,select: false })
     delete:boolean;

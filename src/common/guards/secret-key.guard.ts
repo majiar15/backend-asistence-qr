@@ -14,6 +14,7 @@ export class SecretKeyGuard implements CanActivate {
     }
 
     const isValidKey = await this.authService.validateSecretKey(secretKey);
+    console.log("🚀 ~ SecretKeyGuard ~ canActivate ~ isValidKey:", isValidKey)
     return isValidKey;
   }
 }

@@ -19,13 +19,13 @@ export class CoursesDataSource {
     }
 
     async getCourses(course: Omit<CreateCourseDto, "schedules">):Promise<CoursesDocument>{
-        return await this.courses.findOne(course).select('-students_ids');
+        return await this.courses.findOne(course).select('-students');
     }
 
     async getCoursesByName(name:string,page?: number, limit?: number):Promise<CoursesDocument[]>{
         return await this.courses.find({name:new RegExp(name, 'i'),delete: false })
-        .populate(['schedules_ids','teacher_id']) // Nombre del campo de referencia en el modelo Course
-        .select('-students_ids')
+        .populate(['schedules','teacher_id']) // Nombre del campo de referencia en el modelo Course
+        .select('-students')
         .limit(limit)
         .skip((page -1) * limit)
         .exec();
@@ -35,17 +35,17 @@ export class CoursesDataSource {
     }
 
     async getCourseById(id:string):Promise<CoursesDocument>{
-        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules_ids','teacher_id']).select('-students_ids');
+        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules','teacher_id']).select('-students');
     }
 
 
     async getCourseByIdIncludeStudents(id:string):Promise<CoursesDocument>{
-        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules_ids','teacher_id']);
+        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules','teacher_id']);
     }
 
     async getCourseWithEnrolledStudents(id:string,page?: number, limit?: number):Promise<CoursesDocument>{
         return await this.courses.findOne({_id:id, delete: false }).populate({
-            path: 'students_ids',
+            path: 'students',
             select: '-password',
             populate: { path: 'academic_program' },
             options:{limit,skip:(page -1) * limit}
@@ -63,8 +63,8 @@ export class CoursesDataSource {
     async getAllCourses(page: number, limit: number):Promise<CoursesDocument[]>{
         return await this.courses
         .find({delete: false })
-        .populate('schedules_ids')
-        .select('-students_ids') // Nombre del campo de referencia en el modelo Course
+        .populate('schedules')
+        .select('-students') // Nombre del campo de referencia en el modelo Course
         .limit(limit)
         .skip((page -1) * limit)
         .exec();

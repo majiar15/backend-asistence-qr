@@ -7,7 +7,7 @@ import { SecretDataSource } from "@datasource/secret.datasource";
 export class validateSecretUseCase {
 
   constructor(private secretModel: SecretDataSource, private secretKey: string) { 
-    this.secret = secretKey;
+    this.secret = this.secretKey;
   }
   response: boolean;
   secret: string;
@@ -35,5 +35,6 @@ export class validateSecretUseCase {
 
   private validateSecretKey(): boolean {
     return this.secret == this.secretDb;
+    
   }
 }

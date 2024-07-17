@@ -21,13 +21,13 @@ export class CreateCoursesUseCase {
     async main(courseObject: CreateCourseDto) {
 
         try {
-            await this.saveCourse()
-            return;
+          
             //Separa data de course y horarios
             this.subtractDataBody(courseObject);
 
             await this.checkCourseExists()
 
+            await this.saveCourse()
 
             await this.saveSchedulesWithCourseId();
 
@@ -56,13 +56,7 @@ export class CreateCoursesUseCase {
     }
 
     private async saveCourse() {
-        this.course = {
-            date_end: new Date(),
-            date_start: new Date(),
-            description: 'adsasd',
-            name: 'asdasd',
-            teacher_id: "664915f1d39720f28cd01c97"
-        }
+        
         this.courseDb = await this.coursesDataSource.saveCourse(this.course);
     }
 
@@ -76,13 +70,13 @@ export class CreateCoursesUseCase {
 
     private async updateCourseWithSchedules(){
 
-        if (!this.courseDb.schedules_ids) {
-            this.courseDb.schedules_ids = [];
+        if (!this.courseDb.schedules) {
+            this.courseDb.schedules = [];
           }
 
         //Agrega los IDs de los horarios al curso
         this.schedulesDb.forEach(element => {
-            this.courseDb.schedules_ids.push(element._id)
+            this.courseDb.schedules.push(element._id)
         });
         const updatedCourse = await this.coursesDataSource.updateCourses(this.courseDb._id,this.courseDb);
         console.log("🚀 ~ CreateCoursesUseCase ~ updateCourse ~ data:", updatedCourse)

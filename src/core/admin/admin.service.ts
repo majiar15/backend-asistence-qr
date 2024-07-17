@@ -17,6 +17,7 @@ export class AdminService {
   constructor(private readonly userModel: UserDataSource) { }
 
   async create(adminObjectDto: CreateAdminDto) {
+  console.log("🚀 ~ AdminService ~ create ~ adminObjectDto:", adminObjectDto)
 
     try {
 

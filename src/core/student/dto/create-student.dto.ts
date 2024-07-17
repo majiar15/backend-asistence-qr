@@ -19,7 +19,7 @@ export class CreateStudentDto {
     phone:number;
 
     @IsNotEmpty()
-    academic_program_id:string;
+    academic_program:string;
     
     @IsNotEmpty()
     @IsEmail()

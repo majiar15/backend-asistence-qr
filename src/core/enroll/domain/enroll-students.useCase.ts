@@ -37,17 +37,17 @@ export class EnrollStudentsUseCase {
     async enroll(enroll: CreateEnrollDto) {
 
         const studentIds = enroll.students.map(studentId => new Types.ObjectId(studentId));
-        if (this.course.students_ids == undefined) {
+        if (this.course.students == undefined) {
             this.response = { status: false }
             return ;
            
         }
 
-        const newStudentIds = studentIds.filter(studentId => !this.course.students_ids.includes(studentId));
-        console.log("🚀 ~ ~ this.course.students_ids:", this.course.students_ids)
+        const newStudentIds = studentIds.filter(studentId => !this.course.students.includes(studentId));
+        console.log("🚀 ~ ~ this.course.students_ids:", this.course.students)
         console.log("🚀 ~ ~ studentIds:", studentIds)
 
-        this.course.students_ids = [...this.course.students_ids, ...newStudentIds];
+        this.course.students = [...this.course.students, ...newStudentIds];
         await this.course.save();
          this.response = { status: true }
        

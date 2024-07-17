@@ -33,13 +33,13 @@ export class GetEnrolledStudentsUseCase {
             throw new NotFoundException('COURSES NOT FOUND');
         }
 
-        const studentsWithCourseId = course.students_ids.map((student) => ({
+        const studentsWithCourseId = course.students.map((student) => ({
             ...student,
             course_id: id,
         }))
 
         const itemCount = await this.coursesDataSource.getCourseWithEnrolledStudentsCount(id);
-        this.response= new ResponseDto<any>(true,studentsWithCourseId, page, limit, itemCount.students_ids.length)
+        this.response= new ResponseDto<any>(true,studentsWithCourseId, page, limit, itemCount.students.length)
     }
 
 }
