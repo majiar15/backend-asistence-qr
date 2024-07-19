@@ -18,6 +18,7 @@ export class StudentDataSource {
         return this.student.find({delete: false })
         .populate(['academic_program'])
         .select('-password')
+        .select('-delete')
         .limit(limit)
         .skip((page -1) * limit)
         .exec();;
@@ -27,12 +28,14 @@ export class StudentDataSource {
         return this.student.findOne({dni,delete: false })
         .populate(['academic_program'])
         .select('-password')
+        .select('-delete')
         .exec();
     }
 
     getStudentById(id:string){
-        return this.student.findById(id).populate(['academic_program'])
+        return this.student.findById(id,{delete:false}).populate(['academic_program'])
         .select('-password')
+        .select('-delete')
         .exec();
         
     }
@@ -42,7 +45,9 @@ export class StudentDataSource {
     }
 
     updateStudent(id:string,data){
-        return this.student.findByIdAndUpdate(id,data,{ new: true }) 
+        return this.student.findByIdAndUpdate(id,data,{ new: true })
+        .select('-password')
+        .select('-delete') 
     }
 
     deleteStudent(id){
@@ -53,6 +58,7 @@ export class StudentDataSource {
         return this.student.find(query)
         .populate(['academic_program'])
         .select('-password')
+        .select('-delete')
         .limit(limit)
         .skip((page -1) * limit)
         .exec();

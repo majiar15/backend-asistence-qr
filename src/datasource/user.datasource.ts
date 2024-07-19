@@ -9,7 +9,9 @@ export class UserDataSource {
     ) {}
 
     getUserByDni(dni: number){
-        return this.users.findOne({ dni });
+        return this.users.findOne({ dni })
+        .select('-password')
+        .select('-delete');
     }
     saveUser(user: RegisterAuthDto){
         return this.users.create(user);
@@ -18,12 +20,15 @@ export class UserDataSource {
     getAllUser(role:string,page: number, limit: number){
         return this.users.find({role,delete:false})
             .select('-password')
+            .select('-delete')
             .limit(limit)
             .skip((page -1) * limit);
     }
 
     getUserById(id:string){
-        return this.users.findOne({ _id: id, delete: false }).select('-password');
+        return this.users.findOne({ _id: id, delete: false })
+        .select('-delete')
+        .select('-password');
     }
 
     getUserCount(role:string){
@@ -36,5 +41,6 @@ export class UserDataSource {
 
     deleteUser(id:string){
         return this.users.findByIdAndUpdate(id,{delete:true},{ new: true })
+        .select('-password')
     }
 }
