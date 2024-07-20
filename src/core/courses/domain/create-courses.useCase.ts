@@ -21,7 +21,6 @@ export class CreateCoursesUseCase {
     async main(courseObject: CreateCourseDto) {
 
         try {
-          
             //Separa data de course y horarios
             this.subtractDataBody(courseObject);
 
@@ -32,12 +31,12 @@ export class CreateCoursesUseCase {
             await this.saveSchedulesWithCourseId();
 
             await this.updateCourseWithSchedules();
+            return this.response;
 
         } catch (error) {
             throw error;
         }
 
-        return this.response;
     }
 
 

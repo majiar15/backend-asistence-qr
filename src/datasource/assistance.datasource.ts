@@ -9,8 +9,15 @@ export class AssistanceDataSource {
     ) { }
 
 
-    async takeAssistance(course_id: string, student_id: string, date: string) {
+    async takeAssistance(course_id: string, student_id: string, date: Date) {
         return this.Assistance.create({
+            student_id,
+            date,
+            course_id
+        })
+    }
+    async getAssistance(course_id: string, student_id: string, date: Date) {
+        return this.Assistance.findOne({
             student_id,
             date,
             course_id

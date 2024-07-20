@@ -14,7 +14,9 @@ export class AssistanceService {
     try {
 
       const academicProgramUseCase = new takeAssistanceUseCase(this.assistance)
-      const data = academicProgramUseCase.main(body.courseId, body.studentId, "05/06/2024");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const data = academicProgramUseCase.main(body.courseId, body.studentId, today);
 
       return data
     } catch (error) {

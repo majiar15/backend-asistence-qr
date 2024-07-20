@@ -18,12 +18,12 @@ export class getCoursesTeacherUseCase {
     async main(teacherId: string,query:PaginationQueryParamsDto) {
 
         try {
-            this.getCoursesByTeacher(teacherId,query)
+            await this.getCoursesByTeacher(teacherId,query)
+            return this.response;
         } catch (error) {
             throw error;
         }
 
-        return this.response;
     }
 
     private async getCoursesByTeacher(teacherId:string,query:PaginationQueryParamsDto){
@@ -31,10 +31,10 @@ export class getCoursesTeacherUseCase {
         const {page,limit} = query;
         this.courses = await this.coursesDataSource.getCoursesByTeacher(teacherId,page,limit);
         if(!this.courses){
-            
+
             throw new NotFoundException('COURSES NOT FOUND');
         }
-        const itemCount = await this.coursesDataSource.getCoursesByTeacherCount('teacher');
+        const itemCount = await this.coursesDataSource.getCoursesByTeacherCount(teacherId);
 
         this.response= new ResponseDto<CoursesDocument>(true,this.courses, page, limit, itemCount)
     }

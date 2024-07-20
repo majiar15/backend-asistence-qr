@@ -14,7 +14,7 @@ export class Assistance {
   course_id:Types.ObjectId;
 
   @Prop({ required: true })
-  date: string;
+  date: Date;
 }
 
 export type AssistanceDocument = Assistance & Document;
