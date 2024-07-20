@@ -21,7 +21,7 @@ export class StudentDataSource {
         .select('-delete')
         .limit(limit)
         .skip((page -1) * limit)
-        .exec();;
+        .exec();
     }
 
     getStudent(dni){
@@ -50,7 +50,7 @@ export class StudentDataSource {
         .select('-delete') 
     }
 
-    deleteStudent(id){
+    deleteStudent(id:string){
         return this.student.findByIdAndUpdate(id,{delete:true},{ new: true })
     }
 
@@ -58,7 +58,6 @@ export class StudentDataSource {
         return this.student.find(query)
         .populate(['academic_program'])
         .select('-password')
-        .select('-delete')
         .limit(limit)
         .skip((page -1) * limit)
         .exec();

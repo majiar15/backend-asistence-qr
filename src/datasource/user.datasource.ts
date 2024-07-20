@@ -10,7 +10,6 @@ export class UserDataSource {
 
     getUserByDni(dni: number){
         return this.users.findOne({ dni })
-        .select('-password')
         .select('-delete');
     }
     saveUser(user: RegisterAuthDto){
