@@ -43,11 +43,7 @@ export class EnrollStudentsUseCase {
            
         }
 
-        const newStudentIds = studentIds.filter(studentId => !this.course.students.includes(studentId));
-        console.log("🚀 ~ ~ this.course.students_ids:", this.course.students)
-        console.log("🚀 ~ ~ studentIds:", studentIds)
-
-        this.course.students = [...this.course.students, ...newStudentIds];
+        this.course.students = studentIds;
         await this.course.save();
          this.response = { status: true }
        

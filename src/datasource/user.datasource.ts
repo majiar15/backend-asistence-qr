@@ -23,6 +23,17 @@ export class UserDataSource {
             .limit(limit)
             .skip((page -1) * limit);
     }
+    searchUser(role:string, search:string, page: number, limit: number){
+        return this.users.find({
+            role,
+            delete:false,
+            name: { $regex: search, $options: 'i' }
+        })
+            .select('-password')
+            .select('-delete')
+            .limit(limit)
+            .skip((page -1) * limit);
+    }
 
     getUserById(id:string){
         return this.users.findOne({ _id: id, delete: false })
@@ -32,6 +43,13 @@ export class UserDataSource {
 
     getUserCount(role:string){
         return this.users.countDocuments({role, delete: false })
+    }
+    getUserCountSearch(role:string, search: string){
+        return this.users.countDocuments({
+            role,
+            delete: false,
+            name: { $regex: `/${search}/i` }
+        })
     }
  
     updateUser(id:string,data){
