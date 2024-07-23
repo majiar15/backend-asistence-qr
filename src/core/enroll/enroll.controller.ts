@@ -1,4 +1,4 @@
-import { Controller, Post, Body,} from '@nestjs/common';
+import { Controller, Post, Body, Get, Param,} from '@nestjs/common';
 import { EnrollService } from './enroll.service';
 import { CreateEnrollDto } from './dto/create-enroll.dto';
 import { Role } from '@common/utils/rol.enum';
@@ -12,6 +12,12 @@ export class EnrollController {
   @Roles(Role.Admin)
   create(@Body() createEnrollDto: CreateEnrollDto) {
     return this.enrollService.create(createEnrollDto);
+  }
+
+  @Get('student/:courseId')
+  @Roles(Role.Teacher)
+  getStudentEnroll(@Param('courseId') courseId: string) {
+    return this.enrollService.getStudentEnrolled(courseId);
   }
 
 }

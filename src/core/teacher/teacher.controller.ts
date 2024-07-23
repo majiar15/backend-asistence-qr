@@ -43,4 +43,9 @@ export class TeacherController {
   remove(@Param('id') id: string) {
     return this.teacherService.remove(id);
   }
+  @Get('search/:search')
+  @Roles(Role.Admin)
+  search(@Param('search') search: string,@Query() query:PaginationQueryParamsDto):Promise<ResponseDto<Users>> {
+    return this.teacherService.search(search, query);
+  }
 }

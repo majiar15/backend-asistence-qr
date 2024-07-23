@@ -30,6 +30,19 @@ export class CoursesDataSource {
         .skip((page -1) * limit)
         .exec();
     }
+    async getCourseStudentPopulate(_id:string): Promise<CoursesDocument>{
+        // @ts-ignore
+        return await this.courses.findOne({_id,delete: false })
+        .populate(['schedules','teacher_id','students'])
+        .populate({
+            path: 'students',
+            populate: {
+              path: 'academic_program',
+              model: 'AcademicProgram'
+            }
+          })
+        .exec();
+    }
     async getCoursesByNameCount(name:string){
         return await this.courses.countDocuments({name:new RegExp(name, 'i'), delete: false });
     }

@@ -55,7 +55,7 @@ export class LoginUseCase {
 
 
   private async checkAndDecodePassword() {
-
+    console.log(this.password, this.user.password);
     const checkPassword = await bcrypt.compare(this.password, this.user.password);
 
     if (!checkPassword) throw new HttpException({ status: false, message: 'PASSWORD_INCORRECT' }, 403)
