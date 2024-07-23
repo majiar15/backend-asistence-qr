@@ -13,6 +13,7 @@ import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/paginatio
 import { SearchQueryParamsDto } from './dto/search-course.dto';
 import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
 import { CoursesDocument } from '@datasource/models/course.model';
+import { InProgressCoursesUseCase } from './domain/in-progess-courses.useCase';
 
 @Injectable()
 export class CoursesService {
@@ -22,7 +23,6 @@ export class CoursesService {
   create(createCourseDto: CreateCourseDto) {
 
     try {
-      
       const courseUseCase = new CreateCoursesUseCase(this.courseModel, this.scheduleModel)
       const data = courseUseCase.main(createCourseDto);
       return data
@@ -94,6 +94,16 @@ export class CoursesService {
       
       const courseUseCase = new getCoursesTeacherUseCase(this.courseModel)
       const data = courseUseCase.main(teacherId,query);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
+  }
+  progressCourse(){
+    try {
+      const InProgressCourseUseCase = new InProgressCoursesUseCase(this.courseModel)
+      const data = InProgressCourseUseCase.main();
       return data
 
     } catch (error) {
