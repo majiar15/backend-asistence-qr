@@ -8,18 +8,31 @@ import { RegisterUseCase } from "./domain/register.useCase"
 import { Role } from "@common/utils/rol.enum"
 import { validateSecretUseCase } from "./domain/validate-secret-key.useCase"
 import { SecretDataSource } from "@datasource/secret.datasource"
+import { LoginStudentUseCase } from "./domain/login-student.useCase copy"
+import { StudentDataSource } from "@datasource/student.datasource"
 
 @Injectable()
 export class AuthService {
 
   constructor(
     private readonly userModel: UserDataSource,
+    private readonly studentModel: StudentDataSource,
     private readonly secretModel: SecretDataSource,
     private jwtService: JwtService,
   ) { }
 
 
   async login(userLoginObject: LoginAuthDto) {
+    try {
+      const userUseCase = new LoginStudentUseCase(this.studentModel, this.jwtService)
+      const data = await userUseCase.main(userLoginObject)
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async loginStudent(userLoginObject: LoginAuthDto) {
     try {
       const userUseCase = new LoginUseCase(this.userModel, this.jwtService)
       const data = await userUseCase.main(userLoginObject)
@@ -28,6 +41,7 @@ export class AuthService {
       throw error;
     }
   }
+
   async register(userRegister: RegisterAuthDto, role: Role) {
     try {
       const userUseCase = new RegisterUseCase(this.userModel, role)
