@@ -3,15 +3,18 @@ import { StudentDocument } from "@datasource/models/student.model";
 import { StudentDataSource } from "@datasource/student.datasource";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { StudentQueryParamsDto } from "../dto/get-student-pagination.dto";
+import { CoursesDataSource } from "@datasource/course.datasource";
+import { CoursesDocument } from "@datasource/models/course.model";
 
 
 export class SearchStudentUseCase {
 
     data: string;
     response: ResponseDto<StudentDocument>;
-
+    private course:CoursesDocument
     constructor(
         private studentDataSource: StudentDataSource,
+        private coursesDataSource: CoursesDataSource,
     ) { }
 
 
@@ -31,6 +34,15 @@ export class SearchStudentUseCase {
 
 
     }
+
+    async getCourse(course_id:string) {
+        this.course = await this.coursesDataSource.getCourseById(course_id);
+        if (!this.course) {
+            throw new NotFoundException('COURSES NOT FOUND');
+        }
+    }
+
+
     private validateName(name: string) {
         this.data = name;
         if (!this.data.trim()) {
@@ -43,6 +55,8 @@ export class SearchStudentUseCase {
         const query = Number.parseInt(name) >= 0
             ? { dni: Number.parseInt(name) }
             : {
+                delete: false,
+                academic_program: { $in: this.course.academic_programs },
                 $or: [
                     { name: { $regex: name, $options: 'i' } },
                     { surnames: { $regex: name, $options: 'i' } }

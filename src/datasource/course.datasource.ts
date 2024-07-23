@@ -31,7 +31,6 @@ export class CoursesDataSource {
         .exec();
     }
     async getCourseStudentPopulate(_id:string): Promise<CoursesDocument>{
-        // @ts-ignore
         return await this.courses.findOne({_id,delete: false })
         .populate(['schedules','teacher_id','students'])
         .populate({

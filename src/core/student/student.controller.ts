@@ -27,12 +27,12 @@ export class StudentController {
     return this.studentService.findAll(query);
   }
   
-  @Get('search')
+  @Get('search-not-enrolled')
   search(@Query()query: StudentQueryParamsDto) {
 
     if (query.name) {
       // Lógica para buscar por nombre
-      return this.studentService.findCoursesByName(query);
+      return this.studentService.findStudentByName(query);
     } else if (query.id) {
       // Lógica para buscar por ID
       return this.studentService.findOne(query.id);
