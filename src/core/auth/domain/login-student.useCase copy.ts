@@ -1,21 +1,21 @@
 
-import { UserDataSource } from "@datasource/user.datasource";
 import { LoginAuthDto } from "../dto/login-auth.dto";
 import { Users } from "@datasource/models/user.model";
 import { HttpException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { Document, Types } from "mongoose";
 import { JwtService } from "@nestjs/jwt";
+import { StudentDataSource } from "@datasource/student.datasource";
 
 
-export class LoginUseCase {
+export class LoginStudentUseCase {
   user!: Document<unknown, {}, Users> & Users & {
     _id: Types.ObjectId;
   };
   dni: number = -1;
   password: string = '';
   response: { status: boolean; token: string; data: Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; }; }
-  constructor(private userDatasource: UserDataSource, private jwtService: JwtService) { }
+  constructor(private studentDatasource: StudentDataSource, private jwtService: JwtService) { }
 
   async main(userLoginObject: LoginAuthDto) {
   console.log("🚀 ~ LoginUseCase ~ main ~ userLoginObject:", userLoginObject)
@@ -44,7 +44,7 @@ export class LoginUseCase {
   }
   private async getDataUser() {
 
-    const findUser = await this.userDatasource.getUserByDni(this.dni);
+    const findUser = await this.studentDatasource.getStudentByDni(this.dni);
 
     if (!findUser) {
       throw new HttpException({ status: false, message: 'USER_NOT_FOUND' }, 404)

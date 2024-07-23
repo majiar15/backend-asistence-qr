@@ -42,4 +42,11 @@ export class AuthController {
 
     return this.authService.login(userLoginObject)
   }
+
+  @Public()
+  @Post('login/student')
+  loginStudent(@Body() userLoginObject: LoginAuthDto) {
+
+    return this.authService.login(userLoginObject)
+  }
 }

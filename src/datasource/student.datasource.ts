@@ -14,6 +14,11 @@ export class StudentDataSource {
         return await this.student.create(student)
     }
 
+    getStudentByDni(dni: number){
+        return this.student.findOne({ dni })
+        .select('-delete');
+    }
+
     getAllStudent(page: number, limit: number): Promise<StudentDocument[]>{
         return this.student.find({ delete: false })
         .populate(['academic_program'])
