@@ -22,7 +22,7 @@ export class AuthService {
   ) { }
 
 
-  async login(userLoginObject: LoginAuthDto) {
+  async loginStudent(userLoginObject: LoginAuthDto) {
     try {
       const userUseCase = new LoginStudentUseCase(this.studentModel, this.jwtService)
       const data = await userUseCase.main(userLoginObject)
@@ -32,7 +32,7 @@ export class AuthService {
     }
   }
 
-  async loginStudent(userLoginObject: LoginAuthDto) {
+  async login(userLoginObject: LoginAuthDto) {
     try {
       const userUseCase = new LoginUseCase(this.userModel, this.jwtService)
       const data = await userUseCase.main(userLoginObject)

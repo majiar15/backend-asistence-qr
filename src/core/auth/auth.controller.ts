@@ -47,6 +47,6 @@ export class AuthController {
   @Post('login/student')
   loginStudent(@Body() userLoginObject: LoginAuthDto) {
 
-    return this.authService.login(userLoginObject)
+    return this.authService.loginStudent(userLoginObject)
   }
 }
