@@ -15,6 +15,9 @@ export class CreateCourseDto {
     @IsNotEmpty()
     date_end:Date;
 
+    @IsNotEmpty()
+    intensity:number;
+
     description:string;
 
     @IsNotEmpty()

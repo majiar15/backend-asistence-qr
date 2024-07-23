@@ -19,6 +19,12 @@ export class Courses extends Document {
     date_end:Date;
 
     @Prop()
+    intensity:number;
+
+    @Prop({type:[{type:mongoose.Schema.Types.ObjectId, ref: 'AcademicProgram'}]})
+    academic_programs:Types.ObjectId[];
+
+    @Prop()
     description:string;
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student'}]})
