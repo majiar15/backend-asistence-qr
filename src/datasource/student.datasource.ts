@@ -15,10 +15,21 @@ export class StudentDataSource {
     }
 
     getAllStudent(page: number, limit: number): Promise<StudentDocument[]>{
-        return this.student.find({delete: false })
+        return this.student.find({ delete: false })
         .populate(['academic_program'])
         .select('-password')
         .select('-delete')
+        .limit(limit)
+        .skip((page -1) * limit)
+        .exec();
+    }
+    getStudentsByProgram(academic_program:any[],page: number, limit: number): Promise<StudentDocument[]>{
+        return this.student.find({
+            academic_program: { $in: academic_program },
+            delete: false 
+        })
+        .populate(['academic_program'])
+        .select('-password -delete')
         .limit(limit)
         .skip((page -1) * limit)
         .exec();

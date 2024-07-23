@@ -18,6 +18,9 @@ export class CreateCourseDto {
     @IsNotEmpty()
     intensity:number;
 
+    @IsNotEmpty()
+    academic_programs:any[];
+
     description:string;
 
     @IsNotEmpty()
