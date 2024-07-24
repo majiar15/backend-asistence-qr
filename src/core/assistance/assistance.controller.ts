@@ -14,6 +14,11 @@ export class AssistanceController {
   takeTeacher(@Body() body: TakeAssistanceDTO) {
     return this.assistanceService.take(body);
   }
+  @Post('take/student')
+  @Roles(Role.Student)
+  takeStudent(@Body() body: TakeAssistanceDTO) {
+    return this.assistanceService.take(body);
+  }
   @Get('last/:id')
   @Roles(Role.Teacher)
   lasAssistance(@Param('id') courseId: string) {
@@ -22,14 +27,6 @@ export class AssistanceController {
   @Get('date')
   @Roles(Role.Teacher)
   getByDate(
-    @Query('courseId') courseId: string,
-    @Query('date') date: string,
-  ) {
-    return this.assistanceService.getByDate(date, courseId);
-  }
-  @Get('date/student')
-  @Roles(Role.Student)
-  getByDateStudent(
     @Query('courseId') courseId: string,
     @Query('date') date: string,
   ) {
