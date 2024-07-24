@@ -14,6 +14,7 @@ import { SearchQueryParamsDto } from './dto/search-course.dto';
 import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
 import { CoursesDocument } from '@datasource/models/course.model';
 import { InProgressCoursesUseCase } from './domain/in-progess-courses.useCase';
+import { GetScheduleByStudentUseCase } from './domain/get-schedule-by-student.useCase';
 
 @Injectable()
 export class CoursesService {
@@ -104,6 +105,16 @@ export class CoursesService {
     try {
       const InProgressCourseUseCase = new InProgressCoursesUseCase(this.courseModel)
       const data = InProgressCourseUseCase.main();
+      return data
+
+    } catch (error) {
+      throw error;
+    }
+  }
+  getSchedule(student_id: string){
+    try {
+      const getScheduleByStudentUseCase = new GetScheduleByStudentUseCase(this.courseModel)
+      const data = getScheduleByStudentUseCase.main(student_id);
       return data
 
     } catch (error) {

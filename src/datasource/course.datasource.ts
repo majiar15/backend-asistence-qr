@@ -91,6 +91,11 @@ export class CoursesDataSource {
         .skip((page -1) * limit)
         .exec();
     }
+    async getCoursesByStudent(studentId: string){
+        return await this.courses.find({ students: studentId })
+        .populate('schedules')
+        .exec();
+    }
 
     async getCoursesByTeacherCount(teacherId: string ){
         return await this.courses.find({ teacher_id: teacherId,delete: false }, "_id, name")

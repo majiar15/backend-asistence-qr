@@ -68,5 +68,10 @@ export class CoursesController {
   progressCourse() {
     return this.coursesService.progressCourse();
   }
+  @Get('schedule-by/student/:id')
+  @Roles(Role.Student)
+  getScheduleByStudent(@Param('id') id: string) {
+    return this.coursesService.getSchedule(id);
+  }
 
 }
