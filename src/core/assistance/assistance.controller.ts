@@ -27,6 +27,14 @@ export class AssistanceController {
   ) {
     return this.assistanceService.getByDate(date, courseId);
   }
+  @Get('date/student')
+  @Roles(Role.Student)
+  getByDateStudent(
+    @Query('courseId') courseId: string,
+    @Query('date') date: string,
+  ) {
+    return this.assistanceService.getByDate(date, courseId);
+  }
 
 
 }
