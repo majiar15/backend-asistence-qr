@@ -9,16 +9,16 @@ import { StudentDataSource } from "@datasource/student.datasource";
 
 
 export class LoginStudentUseCase {
-  user!: Document<unknown, {}, Users> & Users & {
+  user!: Document<unknown, any, Users> & Users & {
     _id: Types.ObjectId;
   };
   dni: number = -1;
   password: string = '';
-  response: { status: boolean; token: string; data: Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; }; }
+  response: { status: boolean; token: string; data: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }; }
+  
   constructor(private studentDatasource: StudentDataSource, private jwtService: JwtService) { }
 
   async main(userLoginObject: LoginAuthDto) {
-  console.log("🚀 ~ LoginUseCase ~ main ~ userLoginObject:", userLoginObject)
 
     try {
 
@@ -47,7 +47,7 @@ export class LoginStudentUseCase {
     const findUser = await this.studentDatasource.getStudentByDni(this.dni);
 
     if (!findUser) {
-      throw new HttpException({ status: false, message: 'USER_NOT_FOUND' }, 404)
+      throw new HttpException({ status: false, message: 'El usuario proporcionado es incorrecto.' }, 404)
     }
 
     this.user = findUser;
@@ -56,10 +56,10 @@ export class LoginStudentUseCase {
 
 
   private async checkAndDecodePassword() {
-    console.log(this.password, this.user.password);
+
     const checkPassword = await bcrypt.compare(this.password, this.user.password);
 
-    if (!checkPassword) throw new HttpException({ status: false, message: 'PASSWORD_INCORRECT' }, 403)
+    if (!checkPassword) throw new HttpException({ status: false, message: 'La contraseña ingresada es incorrecta.' }, 403)
 
     this.user.set('password', undefined, { strict: false })
   }

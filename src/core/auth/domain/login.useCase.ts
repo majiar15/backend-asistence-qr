@@ -18,7 +18,6 @@ export class LoginUseCase {
   constructor(private userDatasource: UserDataSource, private jwtService: JwtService) { }
 
   async main(userLoginObject: LoginAuthDto) {
-  console.log("🚀 ~ LoginUseCase ~ main ~ userLoginObject:", userLoginObject)
 
     try {
 
@@ -47,7 +46,7 @@ export class LoginUseCase {
     const findUser = await this.userDatasource.getUserByDni(this.dni);
 
     if (!findUser) {
-      throw new HttpException({ status: false, message: 'USER_NOT_FOUND' }, 404)
+      throw new HttpException({ status: false, message: 'El usuario proporcionado es incorrecto.' }, 404)
     }
 
     this.user = findUser;
@@ -59,7 +58,7 @@ export class LoginUseCase {
     console.log(this.password, this.user.password);
     const checkPassword = await bcrypt.compare(this.password, this.user.password);
 
-    if (!checkPassword) throw new HttpException({ status: false, message: 'PASSWORD_INCORRECT' }, 403)
+    if (!checkPassword) throw new HttpException({ status: false, message: 'La contraseña ingresada es incorrecta.' }, 403)
 
     this.user.set('password', undefined, { strict: false })
   }
