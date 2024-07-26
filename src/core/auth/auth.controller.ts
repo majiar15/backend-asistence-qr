@@ -35,7 +35,6 @@ export class AuthController {
     return this.authService.register(registerAuthDto, Role.Teacher);
   }
 
-
   @Public()
   @Post('login')
   loginUser(@Body() userLoginObject: LoginAuthDto) {

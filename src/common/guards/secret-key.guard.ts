@@ -8,13 +8,12 @@ export class SecretKeyGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const secretKey = request.headers['secret-key'] as string;
+    const secretKey = request.headers['secret-key'];
     if (!secretKey) {
       return false;
     }
 
     const isValidKey = await this.authService.validateSecretKey(secretKey);
-    console.log("🚀 ~ SecretKeyGuard ~ canActivate ~ isValidKey:", isValidKey)
     return isValidKey;
   }
 }

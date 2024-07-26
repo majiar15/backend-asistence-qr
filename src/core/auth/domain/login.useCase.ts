@@ -9,12 +9,12 @@ import { JwtService } from "@nestjs/jwt";
 
 
 export class LoginUseCase {
-  user!: Document<unknown, {}, Users> & Users & {
+  user!: Document<unknown, any, Users> & Users & {
     _id: Types.ObjectId;
   };
   dni: number = -1;
   password: string = '';
-  response: { status: boolean; token: string; data: Document<unknown, {}, Users> & Users & { _id: Types.ObjectId; }; }
+  response: { status: boolean; token: string; data: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }; }
   constructor(private userDatasource: UserDataSource, private jwtService: JwtService) { }
 
   async main(userLoginObject: LoginAuthDto) {
