@@ -1,4 +1,4 @@
-import { Controller, Post, Body} from '@nestjs/common';
+import { Controller, Post, Body, Get} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
@@ -6,6 +6,8 @@ import { Public } from '@common/decorators/public.decorator';
 import { Role } from '@common/utils/rol.enum';
 import { Roles } from '@common/decorators/roles.decorator';
 import { SecretKey } from '@common/decorators/secret-key.decorator';
+import { Payload } from '@common/decorators/payload.decorator';
+import { IPayload } from '@common/interfaces/payload.interface';
 
 
 @Controller('auth')
@@ -47,5 +49,10 @@ export class AuthController {
   loginStudent(@Body() userLoginObject: LoginAuthDto) {
 
     return this.authService.loginStudent(userLoginObject)
+  }
+
+  @Get('current-authenticated-user')
+  currentAuthenticatedUser(@Payload() payload: IPayload){
+    return {status:true,data:payload}
   }
 }

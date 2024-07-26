@@ -8,7 +8,7 @@ import { RegisterUseCase } from "./domain/register.useCase"
 import { Role } from "@common/utils/rol.enum"
 import { validateSecretUseCase } from "./domain/validate-secret-key.useCase"
 import { SecretDataSource } from "@datasource/secret.datasource"
-import { LoginStudentUseCase } from "./domain/login-student.useCase copy"
+import { LoginStudentUseCase } from "./domain/login-student.useCase"
 import { StudentDataSource } from "@datasource/student.datasource"
 
 @Injectable()
@@ -61,4 +61,5 @@ export class AuthService {
       throw error
     }
   }
+
 }
