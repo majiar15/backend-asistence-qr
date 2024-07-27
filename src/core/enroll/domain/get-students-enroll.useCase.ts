@@ -36,7 +36,6 @@ export class GetStudentEnrolled {
 
     async populatedStudents() {
         this.students = (await this.coursesDataSource.getCourseStudentPopulate(this.course._id)).students;
-        console.log(this.students);
     }
     async formatStudents() {
         const studentsFormat = this.students.map((item)=>{

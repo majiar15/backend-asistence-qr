@@ -10,5 +10,5 @@ export class PaginationQueryParamsDto {
   @IsInt()
   @Min(1)
   @Max(50)
-  readonly limit?: number = 5;
+  readonly limit?: number = 10;
 }

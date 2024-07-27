@@ -35,7 +35,7 @@ export class UpdateStudentUseCase {
 
         const findUser = await this.studentDatasource.getStudentById(id);
         if (!findUser) {
-            throw new NotFoundException('STUDENT NOT FOUND');
+            throw new NotFoundException('El estudiante no existe.');
         }
         this.studentDb = findUser;
         this.id = id;

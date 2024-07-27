@@ -4,7 +4,9 @@ import { Types } from 'mongoose';
 @Injectable()
 export class ValidateObjectIdPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
-
+    if(typeof value=='string' || Types.ObjectId.isValid(value)){
+      return value;
+    }
     const objectIdKeys = ['course_id', 'id']
     const key = objectIdKeys.find(k => value.hasOwnProperty(k));
     

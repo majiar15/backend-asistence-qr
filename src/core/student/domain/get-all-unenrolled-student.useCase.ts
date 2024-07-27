@@ -11,7 +11,7 @@ export class GetAllUnenrolledStudentsUseCase {
     private students: StudentDocument[];
     private enrollStudentsSet: Set<string>; // Use Set for faster lookup
     private unenrolledStudents: StudentDocument[];
-    private course:CoursesDocument
+    private course: CoursesDocument
     response: ResponseDto<StudentDocument>;
 
     constructor(
@@ -22,7 +22,7 @@ export class GetAllUnenrolledStudentsUseCase {
     async main(query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>> {
 
         try {
-            const {course_id, page,limit} = query
+            const { course_id, page, limit } = query
 
 
             await this.getAllUnenrolledStudents(course_id)
@@ -32,7 +32,7 @@ export class GetAllUnenrolledStudentsUseCase {
             await this.findUnenrolledStudents(page, limit);
 
             return this.response;
-           
+
         } catch (error) {
             throw error;
         }
@@ -43,19 +43,19 @@ export class GetAllUnenrolledStudentsUseCase {
         this.course = await this.coursesDataSource.getCourseWithEnrolledStudents(id);
 
         if (!this.course) {
-            throw new NotFoundException('COURSES NOT FOUND');
+            throw new NotFoundException('El curso no existe.');
         }
-        
-        this.enrollStudentsSet = new Set<string>(this.course.students.map((item: any) => item._id.toHexString()));
-        
-    }
-   
 
-    private async getAllStudents(page: number, limit: number){
-        this.students = await this.studentDataSource.getStudentsByProgram(this.course.academic_programs,page,limit);
+        this.enrollStudentsSet = new Set<string>(this.course.students.map((item: any) => item._id.toHexString()));
+
+    }
+
+
+    private async getAllStudents(page: number, limit: number) {
+        this.students = await this.studentDataSource.getStudentsByProgram(this.course.academic_programs, page, limit);
 
         if (!this.students) {
-            throw new NotFoundException('COURSES NOT FOUND');
+            throw new NotFoundException('El curso no existe.');
         }
     }
 
@@ -65,7 +65,7 @@ export class GetAllUnenrolledStudentsUseCase {
         );
 
         const itemCount = await this.studentDataSource.getStudentsCount();
-        this.response= new ResponseDto<StudentDocument>(true,this.unenrolledStudents, page, limit, itemCount)
+        this.response = new ResponseDto<StudentDocument>(true, this.unenrolledStudents, page, limit, itemCount)
     }
-    
+
 }

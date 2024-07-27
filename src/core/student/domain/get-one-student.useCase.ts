@@ -30,7 +30,7 @@ export class GetOneStudentUseCase {
         const data = await this.studentDatasource.getStudentById(id);
 
         if (!data) {
-            throw new HttpException({ status: false, message: 'STUDENT NOT FOUND' }, 404)
+            throw new HttpException({ status: false, message: 'El estudiante no existe.' }, 404)
         }
 
         this.response = { status: true, data };

@@ -7,7 +7,7 @@ import { GetAllStudentUseCase } from './domain/get-all-student.useCase';
 import { GetOneStudentUseCase } from './domain/get-one-student.useCase';
 import { UpdateStudentUseCase } from './domain/update-student.useCase copy';
 import { DeleteStudentUseCase } from './domain/delete-student.useCase';
-import { SearchStudentUseCase } from './domain/search-student.useCase';
+import { SearchStudentNotUnenrollUseCase } from './domain/search-student-notunenroll.useCase';
 import { GetEnrolledStudentsUseCase } from './domain/get-enrolled-students.useCase';
 import { GetAllUnenrolledStudentsUseCase } from './domain/get-all-unenrolled-student.useCase';
 import { CoursesDataSource } from '@datasource/course.datasource';
@@ -15,6 +15,7 @@ import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
 import { StudentDocument } from '@datasource/models/student.model';
 import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
 import { StudentQueryParamsDto } from './dto/get-student-pagination.dto';
+import { SearchStudentUseCase } from './domain/search-student.useCase';
 @Injectable()
 export class StudentService {
 
@@ -35,7 +36,7 @@ export class StudentService {
     }
   }
 
-  async findAll(query:PaginationQueryParamsDto) {
+  async findAll(query: PaginationQueryParamsDto) {
 
     try {
       const studentUseCase = new GetAllStudentUseCase(this.studentModel)
@@ -62,10 +63,23 @@ export class StudentService {
   }
 
   findStudentByName(query: StudentQueryParamsDto) {
-    
+
     try {
 
-      const studentUseCase = new SearchStudentUseCase(this.studentModel,this.courseModel)
+      const studentUseCase = new SearchStudentUseCase(this.studentModel)
+      const data = studentUseCase.main(query);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  findStudentByNameNotEnroll(query: StudentQueryParamsDto) {
+
+    try {
+
+      const studentUseCase = new SearchStudentNotUnenrollUseCase(this.studentModel, this.courseModel)
       const data = studentUseCase.main(query);
       return data
 
@@ -100,7 +114,7 @@ export class StudentService {
   }
 
 
-  async getEnrolledStudents(query: StudentQueryParamsDto):Promise<ResponseDto<StudentDocument>>{
+  async getEnrolledStudents(query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>> {
     try {
       const enrollUseCase = new GetEnrolledStudentsUseCase(this.courseModel)
       const data = await enrollUseCase.main(query);
@@ -110,9 +124,9 @@ export class StudentService {
     }
   }
 
-  async getAllUnenrolledStudents(query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>>{
+  async getAllUnenrolledStudents(query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>> {
     try {
-      const enrollUseCase = new GetAllUnenrolledStudentsUseCase(this.courseModel,this.studentModel)
+      const enrollUseCase = new GetAllUnenrolledStudentsUseCase(this.courseModel, this.studentModel)
       const data = await enrollUseCase.main(query);
       return data
     } catch (error) {

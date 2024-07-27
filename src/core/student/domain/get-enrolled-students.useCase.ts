@@ -13,24 +13,24 @@ export class GetEnrolledStudentsUseCase {
         private coursesDataSource: CoursesDataSource,
     ) { }
 
-    async main(query: StudentQueryParamsDto):Promise<ResponseDto<StudentDocument>> {
+    async main(query: StudentQueryParamsDto): Promise<ResponseDto<StudentDocument>> {
 
         try {
-            const { course_id,page,limit} = query;
+            const { course_id, page, limit } = query;
 
-            await this.getEnrolledStudentsByCourse(course_id,page,limit)
+            await this.getEnrolledStudentsByCourse(course_id, page, limit)
 
             return this.response;
         } catch (error) {
             throw error;
         }
     }
-    private async getEnrolledStudentsByCourse(id: string,page: number, limit: number) {
+    private async getEnrolledStudentsByCourse(id: string, page: number, limit: number) {
 
-        const course = await this.coursesDataSource.getCourseWithEnrolledStudents(id,page,limit);
+        const course = await this.coursesDataSource.getCourseWithEnrolledStudents(id, page, limit);
 
         if (!course) {
-            throw new NotFoundException('COURSES NOT FOUND');
+            throw new NotFoundException('El curso solicitado no existe.');
         }
 
         const studentsWithCourseId = course.students.map((student) => ({
@@ -39,7 +39,7 @@ export class GetEnrolledStudentsUseCase {
         }))
 
         const itemCount = await this.coursesDataSource.getCourseWithEnrolledStudentsCount(id);
-        this.response= new ResponseDto<any>(true,studentsWithCourseId, page, limit, itemCount.students.length)
+        this.response = new ResponseDto<any>(true, studentsWithCourseId, page, limit, itemCount.students.length)
     }
 
 }

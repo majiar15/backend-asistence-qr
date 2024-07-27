@@ -18,7 +18,6 @@ export class CreateStudentUseCase {
 
         try {
             this.student = studentObject;
-            console.log("🚀 ~ CreateStudentUseCase ~ main ~ studentObject:", studentObject)
             //Validar si el estudiante existe
             await this.validateStudentExistence()
 
@@ -39,11 +38,10 @@ export class CreateStudentUseCase {
 
     async validateStudentExistence() {
         const student = await this.studentDataSource.getStudent(this.student.dni);
-        console.log("🚀 ~ CreateStudentUseCase ~ validateStudentExistence ~ student:", student)
 
         if (student) {
 
-            throw new ConflictException('Student already exists')
+            throw new ConflictException('El estudiante ya existe.')
 
         }
     }
