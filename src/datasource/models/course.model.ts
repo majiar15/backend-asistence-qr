@@ -33,7 +33,7 @@ export class Courses extends Document {
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Schedule'}]})
     schedules:Types.ObjectId[];
 
-    @Prop({ default: false,select: false })
+    @Prop({ default: false})
     delete:boolean;
 
 }

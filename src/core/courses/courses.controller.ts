@@ -31,10 +31,7 @@ export class CoursesController {
     return this.coursesService.findAll(query);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.coursesService.findOne(+id);
-  // }
+  
 
   @Get('search')
   search(@Query() query:SearchQueryParamsDto) {
@@ -52,6 +49,11 @@ export class CoursesController {
    
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.coursesService.findOne(id);
+  }
+
   @Put(':id')
   @Roles(Role.Admin)
   update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
@@ -61,7 +63,7 @@ export class CoursesController {
   @Delete(':id')
   @Roles(Role.Admin)
   remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+    return this.coursesService.remove(id);
   }
   @Get('in-progress')
   @Roles(Role.Teacher)

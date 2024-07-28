@@ -34,7 +34,7 @@ export class GetAllCoursesUseCase {
         const data=await this.coursesDataSource.getAllCourses(page,limit);
         if(!data){
             
-            throw new NotFoundException('COURSES NOT FOUND');
+            throw new NotFoundException('El curso no se encuentra registrado.');
         }
         
         const itemCount = await this.coursesDataSource.getCourseCount();

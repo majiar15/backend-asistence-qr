@@ -32,7 +32,7 @@ export class getCoursesTeacherUseCase {
         this.courses = await this.coursesDataSource.getCoursesByTeacher(teacherId,page,limit);
         if(!this.courses){
 
-            throw new NotFoundException('COURSES NOT FOUND');
+            throw new NotFoundException('El curso no se encuentra registrado.');
         }
         const itemCount = await this.coursesDataSource.getCoursesByTeacherCount(teacherId);
 

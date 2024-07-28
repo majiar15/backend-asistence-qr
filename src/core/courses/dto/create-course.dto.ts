@@ -38,6 +38,9 @@ export class ScheduleDto {
     hour_end:string;
 
     @IsNotEmpty()
+    hour_milliseconds:number;
+
+    @IsNotEmpty()
     @MinLength(4)
     week_day:string;
 

@@ -19,13 +19,13 @@ export class CoursesDataSource {
     }
 
     async getCourses(course: Omit<CreateCourseDto, "schedules">):Promise<CoursesDocument>{
-        return await this.courses.findOne(course).select('-students');
+        return await this.courses.findOne(course).select('-students -delete');
     }
 
     async getCoursesByName(name:string,page?: number, limit?: number):Promise<CoursesDocument[]>{
         return await this.courses.find({name:new RegExp(name, 'i'),delete: false })
         .populate(['schedules','teacher_id']) // Nombre del campo de referencia en el modelo Course
-        .select('-students')
+        .select('-students -delete')
         .limit(limit)
         .skip((page -1) * limit)
         .exec();
@@ -40,6 +40,7 @@ export class CoursesDataSource {
               model: 'AcademicProgram'
             }
           })
+        .select('-delete')
         .exec();
     }
     async getCoursesByNameCount(name:string){
@@ -47,12 +48,17 @@ export class CoursesDataSource {
     }
 
     async getCourseById(id:string):Promise<CoursesDocument>{
-        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules','teacher_id']).select('-students');
+        return await this.courses.findOne({_id:id, delete: false })
+        .populate(['schedules','teacher_id'])
+        .select('-students -delete');
     }
 
 
     async getCourseByIdIncludeStudents(id:string):Promise<CoursesDocument>{
-        return await this.courses.findOne({_id:id, delete: false }).populate(['schedules','teacher_id']);
+        return await this.courses.findOne({_id:id, delete: false })
+        .populate(['schedules','teacher_id'])
+        .select('-delete')
+        ;
     }
 
     async getCourseWithEnrolledStudents(id:string,page?: number, limit?: number):Promise<CoursesDocument>{
@@ -61,11 +67,13 @@ export class CoursesDataSource {
             select: '-password',
             populate: { path: 'academic_program' },
             options:{limit,skip:(page -1) * limit}
-          }).lean().exec()
+          }).lean()
+          .select('-delete')
+          .exec()
     }
 
     async getCourseWithEnrolledStudentsCount(id:string):Promise<CoursesDocument>{
-        return await this.courses.findOne({_id:id, delete: false }).exec()
+        return await this.courses.findOne({_id:id, delete: false }).select('-delete').exec()
     }
 
     async getCourseCount(){
@@ -76,7 +84,7 @@ export class CoursesDataSource {
         return await this.courses
         .find({delete: false })
         .populate('schedules')
-        .select('-students') // Nombre del campo de referencia en el modelo Course
+        .select('-students -delete') // Nombre del campo de referencia en el modelo Course
         .limit(limit)
         .skip((page -1) * limit)
         .exec();
@@ -87,6 +95,7 @@ export class CoursesDataSource {
 
     async getCoursesByTeacher(teacherId: string,page: number, limit: number ){
         return await this.courses.find({ teacher_id: teacherId,delete: false }, "_id, name")
+        .select('-delete')
         .limit(limit)
         .skip((page -1) * limit)
         .exec();
@@ -94,11 +103,16 @@ export class CoursesDataSource {
     async getCoursesByStudent(studentId: string){
         return await this.courses.find({ students: studentId })
         .populate('schedules')
+        .select('-delete')
         .exec();
     }
 
     async getCoursesByTeacherCount(teacherId: string ){
         return await this.courses.find({ teacher_id: teacherId,delete: false }, "_id, name")
         .countDocuments({delete:false})
+    }
+
+    deleteCourse(id:string){
+        return this.courses.findByIdAndUpdate(id,{delete:true},{ new: true })
     }
 }

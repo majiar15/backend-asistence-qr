@@ -13,6 +13,9 @@ export class Schedule {
   @Prop({ required: true })
   hour_end: string;
 
+  @Prop({ required: true })
+  hour_milliseconds: number;
+
   @Prop()
   room:string;
 

@@ -25,7 +25,7 @@ export class ResponseDto<T> {
     constructor(status: boolean, data:T | T[], page?: number, limit?: number, itemCount?: number) {
         this.status = status;
         this.data = data;
-        if (Array.isArray(data) && page !== undefined && limit !== undefined && itemCount !== undefined) {
+        if (Array.isArray(data) && page && page>0 && limit && limit>0 && itemCount && itemCount>0) {
             this.metadata = new PageMetaDto(page, limit, itemCount);
         }
 

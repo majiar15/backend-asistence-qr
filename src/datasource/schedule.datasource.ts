@@ -27,4 +27,8 @@ export class ScheduleDataSource {
         return this.scheduleModel.bulkWrite(bulkOps);
     }
 
+    deleteSchedules(course_id:string){
+        return this.scheduleModel.updateMany({course_id:course_id},{delete:true}).exec()
+    }
+
 }

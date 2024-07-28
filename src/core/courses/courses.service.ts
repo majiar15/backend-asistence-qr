@@ -15,17 +15,18 @@ import { ResponseDto } from '@common/utils/pagination/dto/paginated.dto';
 import { CoursesDocument } from '@datasource/models/course.model';
 import { InProgressCoursesUseCase } from './domain/in-progess-courses.useCase';
 import { GetScheduleByStudentUseCase } from './domain/get-schedule-by-student.useCase';
+import { DeleteCourseUseCase } from './domain/delete-course-useCase';
 
 @Injectable()
 export class CoursesService {
 
   constructor(private readonly courseModel:CoursesDataSource, private scheduleModel:ScheduleDataSource){}
 
-  create(createCourseDto: CreateCourseDto) {
+  async create(createCourseDto: CreateCourseDto) {
 
     try {
       const courseUseCase = new CreateCoursesUseCase(this.courseModel, this.scheduleModel)
-      const data = courseUseCase.main(createCourseDto);
+      const data = await courseUseCase.main(createCourseDto);
       return data
 
     } catch (error) {
@@ -34,13 +35,13 @@ export class CoursesService {
 
   }
 
-  findAll(query:PaginationQueryParamsDto):Promise<ResponseDto<CoursesDocument>> {
+  async findAll(query:PaginationQueryParamsDto):Promise<ResponseDto<CoursesDocument>> {
 
     try {
       
       const courseUseCase = new GetAllCoursesUseCase(this.courseModel, this.scheduleModel)
 
-      const data = courseUseCase.main(query);
+      const data = await courseUseCase.main(query);
       return data
 
     } catch (error) {
@@ -48,12 +49,12 @@ export class CoursesService {
     }
   }
 
-  findCoursesByName(query:SearchQueryParamsDto):Promise<ResponseDto<CoursesDocument>> {
+  async findCoursesByName(query:SearchQueryParamsDto):Promise<ResponseDto<CoursesDocument>> {
     
     try {
 
       const courseUseCase = new SearchCoursesUseCase(this.courseModel)
-      const data = courseUseCase.main(query);
+      const data = await courseUseCase.main(query);
       return data
 
     } catch (error) {
@@ -61,12 +62,12 @@ export class CoursesService {
     }
   }
 
-  findOne(id:string){
+  async findOne(id:string){
 
     try {
 
       const courseUseCase = new GetOneCourses(this.courseModel)
-      const data = courseUseCase.main(id);
+      const data = await courseUseCase.main(id);
       return data
 
     } catch (error) {
@@ -74,11 +75,11 @@ export class CoursesService {
     }
   }
 
-  update(id: string, updateCourseDto: UpdateCourseDto) {
+  async update(id: string, updateCourseDto: UpdateCourseDto) {
     try {
       
       const courseUseCase = new UpdateCoursesUseCase(this.courseModel, this.scheduleModel)
-      const data = courseUseCase.main(id,updateCourseDto);
+      const data = await courseUseCase.main(id,updateCourseDto);
       return data
 
     } catch (error) {
@@ -86,35 +87,45 @@ export class CoursesService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: string) {
+    try {
+      
+      const courseUseCase = new DeleteCourseUseCase(this.courseModel, this.scheduleModel)
+      const data = await courseUseCase.main(id);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
   }
 
-  getCoursesTeacher(teacherId: string,query:PaginationQueryParamsDto){
+  async getCoursesTeacher(teacherId: string,query:PaginationQueryParamsDto){
     try {
       
       const courseUseCase = new getCoursesTeacherUseCase(this.courseModel)
-      const data = courseUseCase.main(teacherId,query);
+      const data = await courseUseCase.main(teacherId,query);
       return data
 
     } catch (error) {
       throw error;
     }
   }
-  progressCourse(){
+
+  async progressCourse(){
     try {
       const InProgressCourseUseCase = new InProgressCoursesUseCase(this.courseModel)
-      const data = InProgressCourseUseCase.main();
+      const data = await InProgressCourseUseCase.main();
       return data
 
     } catch (error) {
       throw error;
     }
   }
-  getSchedule(student_id: string){
+
+  async getSchedule(student_id: string){
     try {
       const getScheduleByStudentUseCase = new GetScheduleByStudentUseCase(this.courseModel)
-      const data = getScheduleByStudentUseCase.main(student_id);
+      const data = await getScheduleByStudentUseCase.main(student_id);
       return data
 
     } catch (error) {
