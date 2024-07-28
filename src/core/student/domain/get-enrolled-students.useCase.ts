@@ -30,7 +30,7 @@ export class GetEnrolledStudentsUseCase {
         const course = await this.coursesDataSource.getCourseWithEnrolledStudents(id, page, limit);
 
         if (!course) {
-            throw new NotFoundException('El curso solicitado no existe.');
+            throw new NotFoundException('No se encontró el curso solicitado.');
         }
 
         const studentsWithCourseId = course.students.map((student) => ({

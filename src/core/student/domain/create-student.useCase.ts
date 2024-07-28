@@ -1,8 +1,9 @@
 import { CreateStudentDto } from "../dto/create-student.dto";
-import { Document, Types } from "mongoose";
 import { StudentDataSource } from "@datasource/student.datasource";
 import { ConflictException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
+import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
+import { Student } from "@datasource/models/student.model";
 
 
 export class CreateStudentUseCase {
@@ -10,7 +11,7 @@ export class CreateStudentUseCase {
     student: CreateStudentDto;
 
 
-    response: { status: boolean; data: Document<unknown, any, any> & any & { _id: Types.ObjectId; }; }
+    response: ResponseDto<Student>;
 
     constructor(private studentDataSource: StudentDataSource) { }
 
@@ -41,7 +42,7 @@ export class CreateStudentUseCase {
 
         if (student) {
 
-            throw new ConflictException('El estudiante ya existe.')
+            throw new ConflictException('El estudiante ya está registrado.')
 
         }
     }
@@ -56,6 +57,8 @@ export class CreateStudentUseCase {
     async saveStudent() {
         const data= await this.studentDataSource.saveStudent(this.student)
          data.set('password', undefined, { strict: false })
-        this.response = { status: true, data: data}
+         data.set('delete', undefined, { strict: false })
+
+        this.response= new ResponseDto<Student>(true,data)
     }
 }

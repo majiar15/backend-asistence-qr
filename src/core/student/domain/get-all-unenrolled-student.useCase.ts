@@ -43,7 +43,7 @@ export class GetAllUnenrolledStudentsUseCase {
         this.course = await this.coursesDataSource.getCourseWithEnrolledStudents(id);
 
         if (!this.course) {
-            throw new NotFoundException('El curso no existe.');
+            throw new NotFoundException('No se encontró el curso solicitado.');
         }
 
         this.enrollStudentsSet = new Set<string>(this.course.students.map((item: any) => item._id.toHexString()));
@@ -55,7 +55,7 @@ export class GetAllUnenrolledStudentsUseCase {
         this.students = await this.studentDataSource.getStudentsByProgram(this.course.academic_programs, page, limit);
 
         if (!this.students) {
-            throw new NotFoundException('El curso no existe.');
+            throw new NotFoundException('No se encontró el curso solicitado.');
         }
     }
 

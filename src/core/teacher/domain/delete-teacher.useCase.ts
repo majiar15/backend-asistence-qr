@@ -1,10 +1,11 @@
+import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
 import { UserDataSource } from "@datasource/user.datasource";
 
 
 
 export class DeleteTeacherUseCase {
 
-    response: { status: boolean; data: any; }
+    response: ResponseDto<any>;
 
     constructor(private userDatasource: UserDataSource) { }
 
@@ -23,11 +24,11 @@ export class DeleteTeacherUseCase {
         
         const data = await this.userDatasource.deleteUser(id);
         if(data.delete){
-            this.response = { status: true, data:{deletedCount:1} };
+         
+            this.response= new ResponseDto<any>(true,{deletedCount:1})
             return;
         }
-        this.response = { status: false, data:{deletedCount:0} };
-        
+        this.response= new ResponseDto<any>(false,{deletedCount:0})
 
     }
 }

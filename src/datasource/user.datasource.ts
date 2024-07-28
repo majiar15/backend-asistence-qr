@@ -1,5 +1,5 @@
 import { InjectModel } from "@nestjs/mongoose";
-import { Users } from "./models/user.model";
+import { Users, UsersDocument } from "./models/user.model";
 import { Model } from "mongoose";
 import { RegisterAuthDto } from "@core/auth/dto/register-auth.dto";
 
@@ -35,19 +35,15 @@ export class UserDataSource {
             .limit(limit)
             .skip((page - 1) * limit);
     }
-    searchUser(role: string, search: string, page: number, limit: number) {
-        return this.users.find({
-            role,
-            delete: false,
-            name: { $regex: search, $options: 'i' }
-        })
+    searchUser(query:any,page: number, limit: number) {
+        return this.users.find(query)
             .select('-password')
             .select('-delete')
             .limit(limit)
             .skip((page - 1) * limit);
     }
 
-    getUserById(id: string) {
+    getUserById(id: string): Promise<UsersDocument>{
         return this.users.findOne({ _id: id, delete: false })
             .select('-delete')
             .select('-password');
@@ -66,10 +62,15 @@ export class UserDataSource {
 
     updateUser(id: string, data) {
         return this.users.findByIdAndUpdate(id, data, { new: true })
+        .select('-password -delete')
     }
 
     deleteUser(id: string) {
         return this.users.findByIdAndUpdate(id, { delete: true }, { new: true })
             .select('-password')
+    }
+
+    async getUserByNameCount(query:any){
+        return this.users.countDocuments(query).exec();
     }
 }

@@ -39,7 +39,7 @@ export class SearchStudentNotUnenrollUseCase {
     async getCourse(course_id: string) {
         this.course = await this.coursesDataSource.getCourseById(course_id);
         if (!this.course) {
-            throw new NotFoundException('El curso no existe.');
+            throw new NotFoundException('No se encontró el curso solicitado.');
         }
     }
 

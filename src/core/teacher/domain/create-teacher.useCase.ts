@@ -1,9 +1,9 @@
 import { UserDataSource } from "@datasource/user.datasource";
 import { CreateTeacherDto } from "../dto/create-teacher.dto";
 import { ConflictException } from "@nestjs/common";
-import { Document, Types } from "mongoose";
 import * as bcrypt from 'bcrypt';
 import { Users } from "@datasource/models/user.model";
+import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
 
 
 
@@ -11,7 +11,7 @@ import { Users } from "@datasource/models/user.model";
 export class CreateTeacherUseCase {
 
     teacher!: CreateTeacherDto;
-    response: { status: boolean; data: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }; }
+    response: ResponseDto<Users>;
 
     constructor(private userDatasource: UserDataSource) { }
 
@@ -23,9 +23,9 @@ export class CreateTeacherUseCase {
             //encriptar la contraseña
             await this.hashPassword()
             //guardar el profesor
-            const response = await this.saveTeacher()
+           await this.saveTeacher()
 
-            return response;
+            return this.response;
         } catch (error) {
 
             throw error
@@ -38,7 +38,7 @@ export class CreateTeacherUseCase {
 
         const findUser = await this.userDatasource.getUserByDni(this.teacher.dni);
         if (findUser) {
-            throw new ConflictException('Teacher already exists')
+            throw new ConflictException('Ya existe un profesor con ese documento de identidad.')
         }
     }
 
@@ -56,7 +56,8 @@ export class CreateTeacherUseCase {
         const data = await this.userDatasource.saveUser(this.teacher)
 
         data.set('password', undefined, { strict: false })
+        data.set('delete', undefined, { strict: false })
 
-        return this.response = { status: true, data }
+        this.response= new ResponseDto<Users>(true,data)
     }
 }

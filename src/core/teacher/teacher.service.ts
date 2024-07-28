@@ -9,6 +9,7 @@ import { UpdateTeachersUseCase } from './domain/update-teacher.useCase';
 import { DeleteTeacherUseCase } from './domain/delete-teacher.useCase';
 import { PaginationQueryParamsDto } from '@common/utils/pagination/dto/pagination-query-params.dto';
 import { SearchTeacherUseCase } from './domain/search-teacher.useCase';
+import { TeacherQueryParamsDto } from './dto/get-teacher-pagination.dto';
 
 @Injectable()
 export class TeacherService {
@@ -43,12 +44,12 @@ export class TeacherService {
     }
 
   }
-  async search(search: string, query: PaginationQueryParamsDto) {
+  async search(query: TeacherQueryParamsDto) {
 
     try {
       const teacherUseCase = new SearchTeacherUseCase(this.userModel)
     
-      const data = await teacherUseCase.main(search, query)
+      const data = await teacherUseCase.main(query)
       return data;
 
     } catch (error) {

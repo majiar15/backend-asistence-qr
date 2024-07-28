@@ -18,14 +18,14 @@ class PageMetaDto {
 
 export class ResponseDto<T> {
     readonly status: boolean;
-    readonly data: T[];
+    readonly data: T | T[];
 
     readonly metadata?: PageMetaDto;
 
-    constructor(status: boolean, data: T[], page?: number, limit?: number, itemCount?: number) {
+    constructor(status: boolean, data:T | T[], page?: number, limit?: number, itemCount?: number) {
         this.status = status;
         this.data = data;
-        if (page !== undefined && limit !== undefined && itemCount !== undefined) {
+        if (Array.isArray(data) && page !== undefined && limit !== undefined && itemCount !== undefined) {
             this.metadata = new PageMetaDto(page, limit, itemCount);
         }
 

@@ -1,21 +1,24 @@
 import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
-import { PaginationQueryParamsDto } from "@common/utils/pagination/dto/pagination-query-params.dto";
 import { Users } from "@datasource/models/user.model";
 import { UserDataSource } from "@datasource/user.datasource";
+import { TeacherQueryParamsDto } from "../dto/get-teacher-pagination.dto";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { Role } from "@common/utils/rol.enum";
 
 
 
 export class SearchTeacherUseCase {
 
+    name:string;
     response: ResponseDto<Users>;
 
     constructor(private userDatasource: UserDataSource) { }
 
 
-    public async main(search: string, query: PaginationQueryParamsDto):Promise<ResponseDto<Users>> {
+    public async main(query: TeacherQueryParamsDto):Promise<ResponseDto<Users>> {
         try {
-   
-            await this.searchTeacher(search, query)
+            this.validateName(query);
+            await this.searchTeacher(query);
             return this.response;
 
         } catch (error) {
@@ -23,13 +26,31 @@ export class SearchTeacherUseCase {
         }
     }
 
-    private async searchTeacher(search:string, query:PaginationQueryParamsDto) {
-        
-        const { page, limit} = query;
-        const data = await this.userDatasource.searchUser('teacher', search ,page, limit);
-    
-        const itemCount = await this.userDatasource.getUserCountSearch('teacher', search);
+    private validateName(query:TeacherQueryParamsDto) {
+        this.name = query.name;
+        if (!this.name.trim()) {
+            throw new BadRequestException('El nombre no puede estar vacío.');
+        }
+    }
 
-        this.response= new ResponseDto<any>(true,data, page, limit, itemCount)
+    private async searchTeacher(querys:TeacherQueryParamsDto) {
+        const {page,limit}=querys;
+        const query = {
+            delete: false,
+            role:Role.Teacher,
+            $or: [
+                { name: { $regex: this.name, $options: 'i' } },
+                { surnames: { $regex: this.name, $options: 'i' } }
+            ]
+        };
+        const teachers = await this.userDatasource.searchUser(query, page, limit);
+
+        if (!teachers) {
+            throw new NotFoundException(`No se encontraron profesores con el nombre: ${this.name}`);
+        }
+
+        const itemCount = await this.userDatasource.getUserByNameCount(query);
+        this.response = new ResponseDto<Users>(true, teachers, page, limit, itemCount)
+
     }
 }

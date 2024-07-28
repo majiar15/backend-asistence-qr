@@ -3,12 +3,13 @@ import { UpdateTeacherDto } from "../dto/update-teacher.dto";
 import { NotFoundException } from "@nestjs/common";
 import { Users } from "@datasource/models/user.model";
 import { Document, Types } from "mongoose";
+import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
 
 
 export class UpdateTeachersUseCase {
 
     teacherFromDB!: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; };
-    response: { status: boolean; data: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }; }
+    response: ResponseDto<Users>;
     dataUpdate: any;
     id: string = "";
     constructor(private userDatasource: UserDataSource) { }
@@ -35,7 +36,7 @@ export class UpdateTeachersUseCase {
 
         const findUser = await this.userDatasource.getUserById(id);
         if (!findUser) {
-            throw new NotFoundException('TEACHER NOT FOUND');
+            throw new NotFoundException('El profesor no se encuentra registrado.');
         }
         this.teacherFromDB = findUser;
         this.id = id;
@@ -56,6 +57,6 @@ export class UpdateTeachersUseCase {
     private async updateTeacherDB() {
 
         const data = await this.userDatasource.updateUser(this.id, this.dataUpdate)
-        return this.response = { status: true, data }
+        this.response= new ResponseDto<Users>(true,data)
     }
 }

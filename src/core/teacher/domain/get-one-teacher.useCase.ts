@@ -1,13 +1,13 @@
+import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
 import { Users } from "@datasource/models/user.model";
 import { UserDataSource } from "@datasource/user.datasource";
 import { HttpException } from "@nestjs/common";
-import { Document, Types } from "mongoose";
 
 
 
 export class GetOneTeacherUseCase {
 
-    response: { status: boolean; data: (Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }); }
+    response: ResponseDto<Users>;
 
     constructor(private userDatasource: UserDataSource) { }
 
@@ -30,9 +30,9 @@ export class GetOneTeacherUseCase {
         const data = await this.userDatasource.getUserById(id);
 
         if (!data) {
-            throw new HttpException({ status: false, message: 'TEACHER NOT FOUND' }, 404)
+            throw new HttpException({ status: false, message: 'No se encontró el profesor solicitado.' }, 404)
         }
 
-        this.response = { status: true, data };
+        this.response= new ResponseDto<Users>(true,data)
     }
 }

@@ -2,10 +2,10 @@ import { IsEmail, IsNotEmpty, IsNumber, Max, MaxLength, Min, MinLength } from "c
 
 export class CreateStudentDto {
 
-    @IsNotEmpty({ message: 'El nombre no debe estar vacío' })
+    @IsNotEmpty({ message: 'El nombre no debe estar vacío.' })
     name: string;
 
-    @IsNotEmpty({ message: 'Los apellidos no debe estar vacío' })
+    @IsNotEmpty({ message: 'Los apellidos no debe estar vacío.' })
     surnames: string;
 
     @IsNumber({}, { message: "El documento de identidad debe ser un numero." })
@@ -22,8 +22,8 @@ export class CreateStudentDto {
     @IsNotEmpty()
     academic_program: string;
 
-    @IsNotEmpty({ message: 'El correo electrónico no puede estar vacío' })
-    @IsEmail({}, { message: 'El correo electrónico no es válido' })
+    @IsNotEmpty({ message: 'El correo electrónico no puede estar vacío.' })
+    @IsEmail({}, { message: 'El correo electrónico no es válido.' })
     email: string;
 
     @IsNotEmpty({ message: "La contraseña no puede estar vacio." })

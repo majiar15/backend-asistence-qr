@@ -3,12 +3,13 @@ import { Document, Types } from "mongoose";
 import { Student } from "@datasource/models/student.model";
 import { StudentDataSource } from "@datasource/student.datasource";
 import { UpdateStudentDto } from "../dto/update-student.dto";
+import { ResponseDto } from "@common/utils/pagination/dto/paginated.dto";
 
 
 export class UpdateStudentUseCase {
 
     studentDb!: Document<unknown, any, Student> & Student & { _id: Types.ObjectId; };
-    response: { status: boolean; data: Document<unknown, any, Student> & Student & { _id: Types.ObjectId; }; }
+    response: ResponseDto<Student>;
     dataUpdate: any;
     id: string = "";
     constructor(private studentDatasource: StudentDataSource) { }
@@ -35,7 +36,7 @@ export class UpdateStudentUseCase {
 
         const findUser = await this.studentDatasource.getStudentById(id);
         if (!findUser) {
-            throw new NotFoundException('El estudiante no existe.');
+            throw new NotFoundException('El estudiante no se encuentra registrado.');
         }
         this.studentDb = findUser;
         this.id = id;
@@ -56,6 +57,7 @@ export class UpdateStudentUseCase {
     private async updateStudentDB() {
 
         const data = await this.studentDatasource.updateStudent(this.id, this.dataUpdate)
-        this.response = { status: true, data }
+        
+        this.response= new ResponseDto<Student>(true,data)
     }
 }
