@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Get, Param,} from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFile,} from '@nestjs/common';
 import { EnrollService } from './enroll.service';
 import { CreateEnrollDto } from './dto/create-enroll.dto';
 import { Role } from '@common/utils/rol.enum';
 import { Roles } from '@common/decorators/roles.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from '@common/config/multer.config';
 
 @Controller('enroll')
 export class EnrollController {
@@ -18,6 +20,13 @@ export class EnrollController {
   @Roles(Role.Teacher)
   getStudentEnroll(@Param('courseId') courseId: string) {
     return this.enrollService.getStudentEnrolled(courseId);
+  }
+
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file',multerConfig))
+  uploadFile(@UploadedFile() file: Express.Multer.File){
+    return this.enrollService.uploadFile(file)
   }
 
 }

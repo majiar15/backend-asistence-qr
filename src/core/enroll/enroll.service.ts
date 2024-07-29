@@ -4,6 +4,7 @@ import { EnrollStudentsUseCase } from './domain/enroll-students.useCase';
 import { CoursesDataSource } from '@datasource/course.datasource';
 import { StudentDataSource } from '@datasource/student.datasource';
 import { GetStudentEnrolled } from './domain/get-students-enroll.useCase';
+import { UploadFileUseCase } from './domain/upload-file.useCase';
 
 @Injectable()
 export class EnrollService {
@@ -37,5 +38,19 @@ export class EnrollService {
     }
   }
 
+  uploadFile(file: Express.Multer.File){
+   
+    try {
 
+      const getStudentEnrolled = new UploadFileUseCase();
+
+      const data = getStudentEnrolled.main(file);
+
+      return data
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  
 }
