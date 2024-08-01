@@ -1,31 +1,46 @@
 
-import { LoginAuthDto } from "../dto/login-auth.dto";
 import { Users } from "@datasource/models/user.model";
-import { HttpException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, HttpException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
+import * as moment from 'moment-timezone';
 import { Document, Types } from "mongoose";
 import { JwtService } from "@nestjs/jwt";
 import { StudentDataSource } from "@datasource/student.datasource";
+import { StudentAuthDto } from "../dto/student-auth.dto";
+import { DeviceDataSource } from "@datasource/device.datasource";
+import { DeviceDocument } from "@datasource/models/device.model";
 
 
 export class LoginStudentUseCase {
   user!: Document<unknown, any, Users> & Users & {
     _id: Types.ObjectId;
   };
-  dni: number = -1;
-  password: string = '';
-  response: { status: boolean; token: string; data: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }; }
-  
-  constructor(private studentDatasource: StudentDataSource, private jwtService: JwtService) { }
 
-  async main(userLoginObject: LoginAuthDto) {
+  device: DeviceDocument;
+
+  response: { status: boolean; token: string; data: Document<unknown, any, Users> & Users & { _id: Types.ObjectId; }; }
+
+  private readonly timezone = 'America/Bogota';
+
+  constructor(
+    private studentDatasource: StudentDataSource,
+    private deviceDatasource: DeviceDataSource,
+    private jwtService: JwtService
+  ) { }
+
+  async main(studentAuth: StudentAuthDto) {
 
     try {
 
-      this.subtractDataBody(userLoginObject)
 
-      await this.getDataUser()
-      await this.checkAndDecodePassword()
+      await this.getDataUser(studentAuth.dni)
+
+      await this.getDeviceStudent(studentAuth);
+
+      await this.checkAndDecodePassword(studentAuth.password)
+
+      await this.createDeviceStudent(studentAuth);
+
       await this.generateTokenJWT()
 
     } catch (error) {
@@ -36,15 +51,13 @@ export class LoginStudentUseCase {
   }
 
 
-
-  private subtractDataBody(userLoginObject: LoginAuthDto) {
-
-    this.dni = userLoginObject.dni;
-    this.password = userLoginObject.password;
+  private getCurrentDateTime(): string {
+    return moment().tz(this.timezone).format('YYYY-MM-DD HH:mm:ss');
   }
-  private async getDataUser() {
 
-    const findUser = await this.studentDatasource.getStudentByDni(this.dni);
+  private async getDataUser(dni: number) {
+
+    const findUser = await this.studentDatasource.getStudentByDni(dni);
 
     if (!findUser) {
       throw new HttpException({ status: false, message: 'El usuario proporcionado es incorrecto.' }, 404)
@@ -54,14 +67,58 @@ export class LoginStudentUseCase {
 
   }
 
+  private async getDeviceStudent(studentAuth: StudentAuthDto) {
 
-  private async checkAndDecodePassword() {
+    
+    const { brand, display, device_id, model } = studentAuth;
+    const query = {
+      brand, display, device_id, model,
+    }
 
-    const checkPassword = await bcrypt.compare(this.password, this.user.password);
+    this.device = await this.deviceDatasource.getDevice(query);
 
-    if (!checkPassword) throw new HttpException({ status: false, message: 'La contraseña ingresada es incorrecta.' }, 403)
+    if (this.device) {
+
+      const date = this.getCurrentDateTime();
+
+      if (this.device.date) {
+        const deviceDate = moment(this.device.date);
+        const today = moment(date);
+
+        const differenceInSeconds = Math.abs(today.diff(deviceDate, 'seconds'));
+
+        if (differenceInSeconds < 7200 && !this.device.student_id.equals(this.user._id)) {
+          throw new ForbiddenException('Otro estudiante ya ha iniciado sesión en este dispositivo.');
+        }
+      }
+
+      const deviceUpdate = await this.deviceDatasource.updateDevice(query, { student_id: this.user._id })
+      if (!deviceUpdate) {
+        throw new BadRequestException('El dispositivo no pudo ser asociado al estudiante.');
+      }
+    }
+  }
+
+
+
+
+  private async checkAndDecodePassword(password: string) {
+
+    const isPasswordValid = await bcrypt.compare(password, this.user.password);
+
+    if (!isPasswordValid ) throw new HttpException({ status: false, message: 'La contraseña ingresada es incorrecta.' }, 403)
 
     this.user.set('password', undefined, { strict: false })
+  }
+
+  private async createDeviceStudent(studentAuth: StudentAuthDto) {
+    if (!this.device) {
+      const { brand, display, device_id, model } = studentAuth;
+      const data = { brand, display, device_id, model, student_id: this.user._id };
+
+      await this.deviceDatasource.saveDevice(data)
+      
+    }
   }
 
 
@@ -70,7 +127,7 @@ export class LoginStudentUseCase {
     const payload = {
       id: this.user._id,
       name: this.user.name,
-      surnames:this.user.surnames,
+      surnames: this.user.surnames,
       email: this.user.email,
       role: this.user.role,
       dni: this.user.dni,

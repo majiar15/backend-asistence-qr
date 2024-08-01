@@ -10,6 +10,8 @@ import { validateSecretUseCase } from "./domain/validate-secret-key.useCase"
 import { SecretDataSource } from "@datasource/secret.datasource"
 import { LoginStudentUseCase } from "./domain/login-student.useCase"
 import { StudentDataSource } from "@datasource/student.datasource"
+import { StudentAuthDto } from "./dto/student-auth.dto"
+import { DeviceDataSource } from "@datasource/device.datasource"
 
 @Injectable()
 export class AuthService {
@@ -17,15 +19,16 @@ export class AuthService {
   constructor(
     private readonly userModel: UserDataSource,
     private readonly studentModel: StudentDataSource,
+    private readonly deviceModel: DeviceDataSource,
     private readonly secretModel: SecretDataSource,
     private jwtService: JwtService,
   ) { }
 
 
-  async loginStudent(userLoginObject: LoginAuthDto) {
+  async loginStudent(studentAuth: StudentAuthDto) {
     try {
-      const userUseCase = new LoginStudentUseCase(this.studentModel, this.jwtService)
-      const data = await userUseCase.main(userLoginObject)
+      const userUseCase = new LoginStudentUseCase(this.studentModel,this.deviceModel,this.jwtService)
+      const data = await userUseCase.main(studentAuth)
       return data;
     } catch (error) {
       throw error;

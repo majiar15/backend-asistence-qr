@@ -8,6 +8,7 @@ import { Roles } from '@common/decorators/roles.decorator';
 import { SecretKey } from '@common/decorators/secret-key.decorator';
 import { Payload } from '@common/decorators/payload.decorator';
 import { IPayload } from '@common/interfaces/payload.interface';
+import { StudentAuthDto } from './dto/student-auth.dto';
 
 
 @Controller('auth')
@@ -46,9 +47,9 @@ export class AuthController {
 
   @Public()
   @Post('login/student')
-  loginStudent(@Body() userLoginObject: LoginAuthDto) {
+  loginStudent(@Body() studentAuth: StudentAuthDto) {
 
-    return this.authService.loginStudent(userLoginObject)
+    return this.authService.loginStudent(studentAuth)
   }
 
   @Get('current-authenticated-user')

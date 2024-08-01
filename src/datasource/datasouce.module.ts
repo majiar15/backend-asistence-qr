@@ -14,6 +14,8 @@ import { Student, StudentsSchema } from './models/student.model';
 import { StudentDataSource } from './student.datasource';
 import { AssistanceDataSource } from './assistance.datasource';
 import { Assistance,AssistanceSchema } from './models/assistance.model';
+import { Device, DeviceSchema } from './models/device.model';
+import { DeviceDataSource } from './device.datasource';
 
 
 
@@ -26,6 +28,7 @@ import { Assistance,AssistanceSchema } from './models/assistance.model';
         MongooseModule.forFeature([{ name: AcademicProgram.name, schema: AcademicProgramSchema }]),
         MongooseModule.forFeature([{ name: Student.name, schema: StudentsSchema }]),
         MongooseModule.forFeature([{ name: Assistance.name, schema: AssistanceSchema }]),
+        MongooseModule.forFeature([{ name: Device.name, schema: DeviceSchema }]),
     ],
     controllers: [],
     exports: [
@@ -36,6 +39,7 @@ import { Assistance,AssistanceSchema } from './models/assistance.model';
         AcademicProgramDataSource,
         StudentDataSource,
         AssistanceDataSource,
+        DeviceDataSource
     ],
     providers: [
         UserDataSource,
@@ -44,7 +48,8 @@ import { Assistance,AssistanceSchema } from './models/assistance.model';
         SecretDataSource,
         AcademicProgramDataSource,
         StudentDataSource,
-        AssistanceDataSource
+        AssistanceDataSource,
+        DeviceDataSource
     ]
 })
 export class dataSourceModule { }
