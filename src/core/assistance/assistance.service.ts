@@ -18,9 +18,8 @@ export class AssistanceService {
     try {
 
       const academicProgramUseCase = new takeAssistanceUseCase(this.assistance)
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const data = academicProgramUseCase.main(body.courseId, body.studentId, today);
+      
+      const data = academicProgramUseCase.main(body.courseId, body.studentId);
 
       return data
     } catch (error) {
@@ -43,7 +42,6 @@ export class AssistanceService {
 
   getByDate(date:string, courseId: string) {
     try {
-      console.log("date date", date);
       const getByDateAssistanceUseCase = new GetByDateAssistanceUseCase(this.assistance);
       const dateFormat = new Date(date);
 

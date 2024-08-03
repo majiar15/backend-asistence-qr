@@ -26,7 +26,7 @@ export class LastAssistanceUseCase {
             status: true,
             data:{
                 course_id,
-                date: formatDate(assist?.date)
+                date: assist?.date ? formatDate(assist?.date) : null
             }
         }
     }

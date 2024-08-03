@@ -75,5 +75,10 @@ export class CoursesController {
   getScheduleByStudent(@Param('id') id: string) {
     return this.coursesService.getSchedule(id);
   }
+  @Get('schedule-by/course/:id')
+  @Roles(Role.Teacher)
+  getScheduleByCourse(@Param('id') id: string) {
+    return this.coursesService.getScheduleByCourse(id);
+  }
 
 }
