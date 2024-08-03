@@ -10,6 +10,6 @@ export class AcademicProgramDataSource {
 
 
     async getAcademicProgram() {
-        return this.academicProgram.find({})
+        return this.academicProgram.find({}).select('_id name faculty code').exec()
     }
 }

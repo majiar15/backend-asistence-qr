@@ -5,6 +5,7 @@ import { CoursesDataSource } from '@datasource/course.datasource';
 import { StudentDataSource } from '@datasource/student.datasource';
 import { GetStudentEnrolled } from './domain/get-students-enroll.useCase';
 import { UploadFileUseCase } from './domain/upload-file.useCase';
+import { AcademicProgramDataSource } from '@datasource/academic_program.datasource';
 
 @Injectable()
 export class EnrollService {
@@ -12,6 +13,7 @@ export class EnrollService {
   constructor(
     private readonly courseModel:CoursesDataSource,
     private readonly studentModel:StudentDataSource,
+    private readonly acadmicProgramModel:AcademicProgramDataSource,
   
   ){}
 
@@ -38,13 +40,15 @@ export class EnrollService {
     }
   }
 
-  uploadFile(file: Express.Multer.File){
+  uploadFile(file: Express.Multer.File,course_id: string){
    
     try {
 
-      const getStudentEnrolled = new UploadFileUseCase();
+      const getStudentEnrolled = new UploadFileUseCase(
+        this.acadmicProgramModel,this.courseModel,this.studentModel
+      );
 
-      const data = getStudentEnrolled.main(file);
+      const data = getStudentEnrolled.main(file,course_id);
 
       return data
     } catch (error) {

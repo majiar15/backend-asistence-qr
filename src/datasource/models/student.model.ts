@@ -17,6 +17,9 @@ export class Student extends Document {
     @Prop()
     phone: number;
 
+    @Prop({ required: true })
+    code: number;
+
     @Prop()
     role: string;
 

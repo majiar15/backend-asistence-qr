@@ -19,6 +19,10 @@ export class CreateStudentDto {
     @Max(10000000000, { message: "Debe agregar un telefonó valido." })
     phone: number;
 
+    @IsNotEmpty({ message: 'El codigo del estudiante no puede estar vacío' })
+    @Min(100000, { message: "El codigo del estudiante debe tener minimo 6 numeros." })
+    code: number;
+
     @IsNotEmpty()
     academic_program: string;
 

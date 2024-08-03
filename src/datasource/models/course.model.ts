@@ -2,6 +2,18 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, Types } from 'mongoose';
 
 
+
+@Schema({ _id: false })
+export class StudentEnrollment extends Document {
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true })
+  student_id: Types.ObjectId;
+
+  @Prop({ required: true })
+  payment: boolean;
+}
+
+export const StudentEnrollmentSchema = SchemaFactory.createForClass(StudentEnrollment);
+
 @Schema({versionKey:false})
 export class Courses extends Document {
 
@@ -27,8 +39,8 @@ export class Courses extends Document {
     @Prop()
     description:string;
 
-    @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Student'}]})
-    students:Types.ObjectId[];
+    @Prop({ type: [StudentEnrollmentSchema], default: [] })
+    students:StudentEnrollment[];
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId,ref:'Schedule'}]})
     schedules:Types.ObjectId[];
@@ -40,3 +52,4 @@ export class Courses extends Document {
 export type CoursesDocument = Courses & Document;
 
 export const CoursesSchema = SchemaFactory.createForClass(Courses);
+

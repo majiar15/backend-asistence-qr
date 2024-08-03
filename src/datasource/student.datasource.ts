@@ -14,6 +14,10 @@ export class StudentDataSource {
         return await this.student.create(student)
     }
 
+    async addStudents(createStudentDto: CreateStudentDto[]) {
+        return  await this.student.insertMany(createStudentDto);
+      }
+
     getStudentByDni(dni: number){
         return this.student.findOne({ dni })
         .select('-delete');
@@ -81,5 +85,9 @@ export class StudentDataSource {
 
     async getStudentByNameCount(query:any){
         return this.student.countDocuments(query).exec();
+    }
+
+    async findStudentsByDnis(dnis: string[]) {
+        return this.student.find({ dni: { $in: dnis } }).exec();
     }
 }
