@@ -67,7 +67,7 @@ export class LoginUseCase {
   private async generateTokenJWT() {
 
     const payload = {
-      id: this.user._id,
+      _id: this.user._id,
       name: this.user.name,
       surnames:this.user.surnames,
       email: this.user.email,

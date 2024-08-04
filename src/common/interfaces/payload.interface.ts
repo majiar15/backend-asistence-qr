@@ -1,5 +1,5 @@
 export interface IPayload {
-    id:       string;
+    _id:       string;
     name:     string;
     surnames: string;
     email:    string;
