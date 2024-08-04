@@ -157,7 +157,7 @@ export class UploadFileUseCase {
         if (students.length <= 0) {
             throw new NotFoundException(`No se encontraron estudiantes en el archivo proporcionado.`);
         }
-        
+
         const dnis = students.map(student => student.dni);
 
         const existingStudents = await this.studentDataSource.findStudentsByDnis(dnis);
@@ -166,11 +166,8 @@ export class UploadFileUseCase {
 
         const newStudents = students.filter(student => !existingDnis.has(parseInt(student.dni)));
 
-        if(existingStudents.length>0 && newStudents.length<=0){
-            this.studentsToEnroll = existingStudents.map(student => {
-                const statusPayment = this.studentPaymentStatus.includes(student.dni);
-                return { student_id: student._id, payment: !statusPayment }
-            });
+        if (existingStudents.length > 0 && newStudents.length <= 0) {
+            this.studentsToEnroll = existingStudents.map(student => new Types.ObjectId(student._id));
             return;
         }
 
@@ -182,16 +179,13 @@ export class UploadFileUseCase {
         const addedStudents = await this.studentDataSource.addStudents(newStudents)
 
         const combinedResults = [
-            ...existingStudents.map(({_id,dni}) => ({ dni,_id})),
-            ...addedStudents.map(({ _id, dni }) => ({ dni,_id}))
+            ...existingStudents.map(({ _id, dni }) => ({ dni, _id })),
+            ...addedStudents.map(({ _id, dni }) => ({ dni, _id }))
         ];
 
+        this.studentsToEnroll = combinedResults.map(student => new Types.ObjectId(student._id));
 
-        this.studentsToEnroll = combinedResults.map(student => {
-            const statusPayment = this.studentPaymentStatus.includes(student.dni);
-            return { student_id: student._id, payment: !statusPayment }
-        });
-       
+
     }
 
     private async enrollingStudents(course_id: string) {
@@ -199,7 +193,9 @@ export class UploadFileUseCase {
             throw new BadRequestException('No hay estudiantes para matricular en este momento.');
         }
 
-        const course = await this.coursesDataSource.updateCourses(course_id, { students: this.studentsToEnroll })
+        this.studentPaymentStatus = this.studentPaymentStatus.map(id => new Types.ObjectId(id));
+
+        const course = await this.coursesDataSource.updateCourses(course_id, { students: this.studentsToEnroll, unpaidStudent: this.studentPaymentStatus })
         if (!course) {
             throw new BadRequestException('No se pudo matricular los estudiantes')
         }
