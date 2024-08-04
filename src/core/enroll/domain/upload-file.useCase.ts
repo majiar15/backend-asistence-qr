@@ -8,6 +8,8 @@ import { unlink } from 'fs';
 import { Types, Document } from 'mongoose';
 import { extname, join } from 'path';
 import * as XLSX from 'xlsx';
+import * as bcrypt from 'bcrypt';
+
 
 export class UploadFileUseCase {
 
@@ -27,7 +29,8 @@ export class UploadFileUseCase {
         private coursesDataSource: CoursesDataSource,
         private studentDataSource: StudentDataSource,
     ) { }
-    // @ts-ignore
+  
+
     async main(file: Express.Multer.File, course_id: string) {
 
         try {
@@ -50,9 +53,9 @@ export class UploadFileUseCase {
         this.academic_programs = await this.academicProgramDataSource.getAcademicProgram()
 
     }
-    // @ts-ignore
+    
     private async processExcel(file: Express.Multer.File): Promise<any[]> {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
 
             try {
 
@@ -101,7 +104,7 @@ export class UploadFileUseCase {
 
 
 
-                const newStudents = allStudents.slice(1).map((element) => {
+                const newStudents = await Promise.all(allStudents.slice(1).map( async (element) => {
                     const { name, surnames } = cutName(element[4] == "*" ? element[5] : element[4]);
 
                     const find_academic_program = this.academic_programs.find((item) => item.code == parseInt(element[3]))
@@ -110,6 +113,9 @@ export class UploadFileUseCase {
                     if (element[4] == "*") {
                         this.studentPaymentStatus.push(parseInt(element[2]));
                     };
+
+                    const passwordHash = await bcrypt.hash(element[2], 10);
+                    
 
                     element = {
 
@@ -121,11 +127,11 @@ export class UploadFileUseCase {
                         email: element[4] == "*" ? element[6] : element[5],
                         phone: element[4] == "*" ? element[7] : element[6],
                         role: "student",
-                        password: element[2],
+                        password: passwordHash,
                     }
 
                     return element;
-                });
+                }));
 
                 unlink(filePath, (err) => {
                     if (err) {
