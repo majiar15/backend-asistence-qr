@@ -3,6 +3,7 @@ import { Courses, CoursesDocument } from "./models/course.model";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateCourseDto } from "@core/courses/dto/create-course.dto";
 import { Schedule, ScheduleDocument } from "./models/schedule.model";
+import { getDateUTC } from "@common/utils/getDateUTC";
 // import { formatDate } from "@common/utils/formatDate";
 
 export class CoursesDataSource {
@@ -32,7 +33,7 @@ export class CoursesDataSource {
     }
     async getCourseStudentPopulate(_id:string): Promise<CoursesDocument>{
         return await this.courses.findOne({_id,delete: false })
-        .populate(['schedules','teacher_id','students'])
+        .populate(['schedules','teacher_id','students.student_id'])
         .populate({
             path: 'students',
             populate: {
@@ -94,7 +95,17 @@ export class CoursesDataSource {
     }
 
     async getCoursesByTeacher(teacherId: string,page: number, limit: number ){
-        return await this.courses.find({ teacher_id: teacherId,delete: false }, "_id, name")
+        const date = getDateUTC();
+        return await this.courses.find({
+            teacher_id: teacherId,
+            date_start: {
+                $lte: date
+            },
+            date_end:{
+                $gte: date,
+            },
+            delete: false
+        }, "_id, name")
         .select('-delete')
         .limit(limit)
         .skip((page -1) * limit)

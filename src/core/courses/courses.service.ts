@@ -16,6 +16,7 @@ import { CoursesDocument } from '@datasource/models/course.model';
 import { InProgressCoursesUseCase } from './domain/in-progess-courses.useCase';
 import { GetScheduleByStudentUseCase } from './domain/get-schedule-by-student.useCase';
 import { DeleteCourseUseCase } from './domain/delete-course-useCase';
+import { GetScheduleByCourseUseCase } from './domain/get-schedule-by-course.useCase';
 
 @Injectable()
 export class CoursesService {
@@ -126,6 +127,16 @@ export class CoursesService {
     try {
       const getScheduleByStudentUseCase = new GetScheduleByStudentUseCase(this.courseModel)
       const data = await getScheduleByStudentUseCase.main(student_id);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getScheduleByCourse(course_id: string){
+    try {
+      const getScheduleByCourseUseCase = new GetScheduleByCourseUseCase(this.courseModel)
+      const data = await getScheduleByCourseUseCase.main(course_id);
       return data
 
     } catch (error) {

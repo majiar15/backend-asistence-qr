@@ -36,14 +36,14 @@ export class AssistanceDataSource {
     }
     async getAssistanceByDate(date: Date,course_id: string) {
         const startOfDay = new Date(date);
+        const endOfDay = new Date(date);
         startOfDay.setUTCHours(0, 0, 0, 0);
 
-        const endOfDay = new Date(date);
         endOfDay.setUTCHours(23, 59, 59, 999);
         return this.Assistance.find({
             date: {
-                $gte: new Date(startOfDay),
-                $lte: new Date(endOfDay)
+                $gte: startOfDay,
+                $lte: endOfDay
             },
             course_id
         })

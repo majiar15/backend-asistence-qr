@@ -1,4 +1,5 @@
 
+import { getDateUTC } from "@common/utils/getDateUTC";
 import { AssistanceDataSource } from "@datasource/assistance.datasource";
 import {ForbiddenException} from '@nestjs/common';
 import { Types,Document } from "mongoose";
@@ -10,8 +11,9 @@ export class takeAssistanceUseCase {
 
     constructor(private AssistanceDataSource: AssistanceDataSource){}
 
-    async main(course_id: string, student_id: string, date: Date){
+    async main(course_id: string, student_id: string){
         try {
+            const date = getDateUTC();
             await this.validateAsistence(course_id, student_id, date)
             await this.takeAsistence(course_id, student_id, date);
             return this.response;
@@ -31,4 +33,5 @@ export class takeAssistanceUseCase {
         const data= await this.AssistanceDataSource.takeAssistance(course_id, student_id, date)
         this.response= {status:true,data}
     }
+
 }

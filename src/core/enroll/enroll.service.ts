@@ -39,7 +39,7 @@ export class EnrollService {
       throw error;
     }
   }
-
+  // @ts-ignore
   uploadFile(file: Express.Multer.File,course_id: string){
    
     try {

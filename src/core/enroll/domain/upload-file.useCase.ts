@@ -27,7 +27,7 @@ export class UploadFileUseCase {
         private coursesDataSource: CoursesDataSource,
         private studentDataSource: StudentDataSource,
     ) { }
-
+    // @ts-ignore
     async main(file: Express.Multer.File, course_id: string) {
 
         try {
@@ -50,7 +50,7 @@ export class UploadFileUseCase {
         this.academic_programs = await this.academicProgramDataSource.getAcademicProgram()
 
     }
-
+    // @ts-ignore
     private async processExcel(file: Express.Multer.File): Promise<any[]> {
         return new Promise((resolve, reject) => {
 

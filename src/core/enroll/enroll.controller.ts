@@ -26,6 +26,7 @@ export class EnrollController {
   @Post('upload')
   @Roles(Role.Admin,Role.Teacher)
   @UseInterceptors(FileInterceptor('file',multerConfig))
+  // @ts-ignore
   uploadFile(@UploadedFile() file: Express.Multer.File,@Body('course_id') course_id: string,){
     return this.enrollService.uploadFile(file,course_id)
   }
