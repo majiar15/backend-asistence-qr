@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get} from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
@@ -9,6 +9,7 @@ import { SecretKey } from '@common/decorators/secret-key.decorator';
 import { Payload } from '@common/decorators/payload.decorator';
 import { IPayload } from '@common/interfaces/payload.interface';
 import { StudentAuthDto } from './dto/student-auth.dto';
+import { ChangePasswordDto, ValidatePhoneDto, ValidateUserDto } from './dto/change-password.dto';
 
 
 @Controller('auth')
@@ -52,8 +53,32 @@ export class AuthController {
     return this.authService.loginStudent(studentAuth)
   }
 
+  @Public()
+  @Post('validate-user')
+  validateUser(@Body() body: ValidateUserDto) {
+    const { email, dni } = body;
+    return this.authService.validateUser(email, dni);
+
+  }
+
+  @Public()
+  @Post('validate-phone')
+  async validatePhone(@Body() body: ValidatePhoneDto) {
+    const { email, dni, phone } = body;
+    return this.authService.validatePhone(email, dni, phone);
+
+  }
+
+  @Public()
+  @Post('change-password')
+  async setPassword(@Body() body: ChangePasswordDto) {
+
+    return this.authService.setPassword(body);
+
+  }
+
   @Get('current-authenticated-user')
-  currentAuthenticatedUser(@Payload() payload: IPayload){
-    return {status:true,data:payload}
+  currentAuthenticatedUser(@Payload() payload: IPayload) {
+    return { status: true, data: payload }
   }
 }

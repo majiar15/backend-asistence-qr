@@ -12,6 +12,10 @@ import { LoginStudentUseCase } from "./domain/login-student.useCase"
 import { StudentDataSource } from "@datasource/student.datasource"
 import { StudentAuthDto } from "./dto/student-auth.dto"
 import { DeviceDataSource } from "@datasource/device.datasource"
+import { ValidateUserUseCase } from "./domain/validateUser.useCase"
+import { ValidatePhoneUseCase } from "./domain/validate_phone.useCase"
+import { ChangePasswordUseCase } from "./domain/change_password.useCase"
+import { ChangePasswordDto } from "./dto/change-password.dto"
 
 @Injectable()
 export class AuthService {
@@ -27,7 +31,7 @@ export class AuthService {
 
   async loginStudent(studentAuth: StudentAuthDto) {
     try {
-      const userUseCase = new LoginStudentUseCase(this.studentModel,this.deviceModel,this.jwtService)
+      const userUseCase = new LoginStudentUseCase(this.studentModel, this.deviceModel, this.jwtService)
       const data = await userUseCase.main(studentAuth)
       return data;
     } catch (error) {
@@ -61,6 +65,45 @@ export class AuthService {
       const data = await userUseCase.main();
       return data;
     } catch (error) {
+      throw error
+    }
+  }
+
+
+
+  async validateUser(email: string, dni: number) {
+    try {
+      const validateUser = new ValidateUserUseCase(this.studentModel);
+      const data = await validateUser.main(email, dni);
+      return data;
+
+    } catch (error) {
+
+      throw error
+    }
+  }
+
+
+  async validatePhone(email: string, dni: number, phone: number) {
+    try {
+      const validateUser = new ValidatePhoneUseCase(this.studentModel);
+      const data = await validateUser.main(email, dni, phone);
+      return data;
+
+    } catch (error) {
+
+      throw error
+    }
+  }
+
+  async setPassword(body: ChangePasswordDto) {
+    try {
+      const validateUser = new ChangePasswordUseCase(this.studentModel);
+      const data = await validateUser.main(body);
+      return data;
+
+    } catch (error) {
+
       throw error
     }
   }

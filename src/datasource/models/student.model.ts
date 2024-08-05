@@ -21,6 +21,9 @@ export class Student extends Document {
     code: number;
 
     @Prop()
+    hash: string;
+
+    @Prop()
     role: string;
 
     @Prop({  required: true, type: mongoose.Schema.Types.ObjectId, ref: 'AcademicProgram', })

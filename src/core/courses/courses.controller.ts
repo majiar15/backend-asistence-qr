@@ -25,7 +25,7 @@ export class CoursesController {
   @Roles(Role.Admin, Role.Teacher)
   findAll(@Payload() payload: IPayload,@Query() query:PaginationQueryParamsDto):Promise<ResponseDto<CoursesDocument>> {
     if (payload.role === Role.Teacher) {
-      return this.coursesService.getCoursesTeacher(payload.id,query);
+      return this.coursesService.getCoursesTeacher(payload._id,query);
     }
 
     return this.coursesService.findAll(query);
