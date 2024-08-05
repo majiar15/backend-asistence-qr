@@ -9,11 +9,12 @@ export class AssistanceDataSource {
     ) { }
 
 
-    async takeAssistance(course_id: string, student_id: string, date: Date) {
+    async takeAssistance(course_id: string, student_id: string, date: Date, isLateArrive: boolean = false) {
         return this.Assistance.create({
             student_id,
             date,
-            course_id
+            course_id,
+            late: isLateArrive
         })
     }
     async getAssistance(course_id: string, student_id: string, date: Date) {

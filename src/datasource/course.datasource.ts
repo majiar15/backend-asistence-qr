@@ -33,7 +33,7 @@ export class CoursesDataSource {
     }
     async getCourseStudentPopulate(_id:string): Promise<CoursesDocument>{
         return await this.courses.findOne({_id,delete: false })
-        .populate(['schedules','teacher_id','students.student_id'])
+        .populate(['schedules','teacher_id', 'students'])
         .populate({
             path: 'students',
             populate: {

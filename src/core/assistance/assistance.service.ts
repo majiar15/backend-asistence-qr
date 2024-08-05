@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { takeAssistanceUseCase } from './domain/take_assistance.useCase';
+import { TakeAssistanceUseCase } from './domain/take_assistance.useCase';
 import { AssistanceDataSource } from '@datasource/assistance.datasource';
 import { TakeAssistanceDTO } from './dto/take-assistance.dto';
 import {  LastAssistanceUseCase } from './domain/last_assistance.useCase';
 import { GetByDateAssistanceUseCase } from './domain/get_by_date.useCase';
+import { TakeAssistanceStudentUseCase } from './domain/take_assistance_student.useCase';
+import { CoursesDataSource } from '@datasource/course.datasource';
 
 @Injectable()
 export class AssistanceService {
 
   constructor(
     private readonly assistance: AssistanceDataSource,
+    private readonly course: CoursesDataSource,
   ) { }
 
 
@@ -17,9 +20,24 @@ export class AssistanceService {
   take(body: TakeAssistanceDTO) {
     try {
 
-      const academicProgramUseCase = new takeAssistanceUseCase(this.assistance)
+      const takeAssistanceUseCase = new TakeAssistanceUseCase(
+        this.assistance,
+        this.course
+      )
       
-      const data = academicProgramUseCase.main(body.courseId, body.studentId);
+      const data = takeAssistanceUseCase.main(body.courseId, body.studentId);
+
+      return data
+    } catch (error) {
+      throw error;
+    }
+  }
+  takeStudent(body: TakeAssistanceDTO) {
+    try {
+
+      const takeAssistanceStudentUseCase = new TakeAssistanceStudentUseCase(this.assistance)
+      
+      const data = takeAssistanceStudentUseCase.main(body.courseId, body.studentId);
 
       return data
     } catch (error) {

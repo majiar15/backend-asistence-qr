@@ -15,6 +15,9 @@ export class Assistance {
 
   @Prop({ required: true })
   date: Date;
+
+  @Prop({ required: true })
+  late: boolean;
 }
 
 export type AssistanceDocument = Assistance & Document;

@@ -40,13 +40,13 @@ export class GetStudentEnrolled {
     async formatStudents() {
         const studentsFormat = this.students.map((item)=>{
             return {
-                "_id" : item.student_id._id,
-                "name" : item.student_id.name,
-                "surnames" : item.student_id.surnames,
-                "dni" : item.student_id.dni,
-                "phone" : item.student_id.phone,
-                "academic_program" : item.student_id.academic_program,
-                "email" : item.student_id.email,
+                "_id" : item._id,
+                "name" : item.name,
+                "surnames" : item.surnames,
+                "dni" : item.dni,
+                "phone" : item.phone,
+                "academic_program" : item.academic_program,
+                "email" : item.email,
             }
         });
         this.response = {
