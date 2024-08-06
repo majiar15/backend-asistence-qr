@@ -12,6 +12,7 @@ import { StudentModule } from './core/student/student.module';
 import { AcademicProgramModule } from './core/academic_program/academic_program.module';
 import { AssistanceModule } from './core/assistance/assistance.module';
 import { EnrollModule } from './core/enroll/enroll.module';
+// @ts-ignore
 import { AssistanceTeacherModule } from './core/assistance_teacher/assistanceTeacher.module';
 
 
