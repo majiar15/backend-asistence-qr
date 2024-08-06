@@ -60,7 +60,7 @@ export class LoginStudentUseCase {
     const findUser = await this.studentDatasource.getStudentByDni(dni);
 
     if (!findUser) {
-      throw new HttpException({ status: false, message: 'El usuario proporcionado es incorrecto.' }, 404)
+      throw new HttpException({ status: false, message: 'STUDENT_NOT_FOUND' }, 404)
     }
 
     this.user = findUser;
@@ -88,13 +88,13 @@ export class LoginStudentUseCase {
         const differenceInSeconds = Math.abs(today.diff(deviceDate, 'seconds'));
 
         if (differenceInSeconds < 7200 && !this.device.student_id.equals(this.user._id)) {
-          throw new ForbiddenException('Otro estudiante ya ha iniciado sesión en este dispositivo.');
+          throw new ForbiddenException('DEVICE_ALREADY_IN_USE_BY_STUDENT');
         }
       }
 
       const deviceUpdate = await this.deviceDatasource.updateDevice(query, { student_id: this.user._id })
       if (!deviceUpdate) {
-        throw new BadRequestException('El dispositivo no pudo ser asociado al estudiante.');
+        throw new BadRequestException('DEVICE_ASSOCIATION_FAILED');
       }
     }
   }
@@ -106,7 +106,7 @@ export class LoginStudentUseCase {
 
     const isPasswordValid = await bcrypt.compare(password, this.user.password);
 
-    if (!isPasswordValid ) throw new HttpException({ status: false, message: 'La contraseña ingresada es incorrecta.' }, 403)
+    if (!isPasswordValid ) throw new HttpException({ status: false, message: 'INVALID_PASSWORD' }, 403)
 
     this.user.set('password', undefined, { strict: false })
   }
