@@ -28,6 +28,7 @@ export class AssistanceTeacherService {
         body.courseId,
         body.bitacora,
         body.secret,
+        body.isCancel,
         teacher_id
       );
 

@@ -19,6 +19,9 @@ export class AssistanceTeacher {
   @Prop({ required: true })
   hour_start: string;
 
+  @Prop({ required: true })
+  isCancel: boolean;
+
   @Prop({ required: false })
   secret: string;
 }

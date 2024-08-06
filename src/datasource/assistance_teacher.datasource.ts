@@ -9,7 +9,7 @@ export class AssistanceTeacherDataSource {
     ) { }
 
 
-    async takeAssistance(course_id: string, teacher_id: string, bitacora:string, secret: string , date: Date) {
+    async takeAssistance(course_id: string, teacher_id: string, bitacora:string, secret: string , date: Date, isCancel: boolean = false ) {
         const fecha = new Date();
         const hour = fecha.getHours().toString().padStart(2, '0');
         const minutes = fecha.getMinutes().toString().padStart(2, '0');
@@ -19,7 +19,8 @@ export class AssistanceTeacherDataSource {
             course_id,
             bitacora,
             secret,
-            hour_start: `${hour}:${minutes}`
+            hour_start: `${hour}:${minutes}`,
+            isCancel
         })
     }
     async getAssistance(course_id: string, teacher_id: string, date: Date) {

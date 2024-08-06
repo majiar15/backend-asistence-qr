@@ -16,12 +16,12 @@ export class CreateAssistanceTeacherUseCase {
         private CourseDataSource: CoursesDataSource
     ) {}
 
-    async main(courseId: string, bitacora: string, secret: string, teacher_id: string) {
+    async main(courseId: string, bitacora: string, secret: string, isCancel: boolean = false, teacher_id: string) {
         try {
             const date = getDateUTC();
             await this.validateAssistance(courseId, teacher_id, date);
             await this.getCourse(courseId);
-            await this.takeAssistance(courseId,teacher_id, bitacora, secret, date);
+            await this.takeAssistance(courseId,teacher_id, bitacora, isCancel, secret, date);
             return this.response;
         } catch (error) {
             throw error;
@@ -43,8 +43,8 @@ export class CreateAssistanceTeacherUseCase {
         }
     }
 
-    async takeAssistance(courseId: string,teacherId: string, bitacora: string, secret: string, date: Date) {
-        const data = await this.AssistanceTeacherDataSource.takeAssistance(courseId,teacherId, bitacora, secret, date);
+    async takeAssistance(courseId: string,teacherId: string, bitacora: string,isCancel: boolean, secret: string, date: Date) {
+        const data = await this.AssistanceTeacherDataSource.takeAssistance(courseId,teacherId, bitacora, secret, date, isCancel);
         this.response = { status: true, data };
     }
 

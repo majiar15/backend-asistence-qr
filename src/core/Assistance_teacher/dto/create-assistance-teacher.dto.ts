@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateAssistanceDTO {
     @IsNotEmpty()
@@ -12,6 +12,9 @@ export class CreateAssistanceDTO {
     @IsNotEmpty()
     @IsString()
     bitacora: string;
+
+    @IsBoolean()
+    isCancel: boolean = false;
 
 
 }
