@@ -12,6 +12,7 @@ import { StudentModule } from './core/student/student.module';
 import { AcademicProgramModule } from './core/academic_program/academic_program.module';
 import { AssistanceModule } from '@core/assistance/assistance.module';
 import { EnrollModule } from './core/enroll/enroll.module';
+import { AssistanceTeacherModule } from '@core/assistance_teacher/AssistanceTeacher.module'; 
 
 
 
@@ -34,6 +35,7 @@ import { EnrollModule } from './core/enroll/enroll.module';
     AcademicProgramModule,
     AssistanceModule,
     EnrollModule,
+    AssistanceTeacherModule,
     
   ],
   controllers: [AppController],

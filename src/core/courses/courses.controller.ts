@@ -49,7 +49,16 @@ export class CoursesController {
    
   }
 
-  
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.coursesService.findOne(id);
+  }
+
+  @Put(':id')
+  @Roles(Role.Admin)
+  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
+    return this.coursesService.update(id, updateCourseDto);
+  }
 
   @Delete(':id')
   @Roles(Role.Admin)
@@ -70,17 +79,6 @@ export class CoursesController {
   @Roles(Role.Teacher)
   getScheduleByCourse(@Param('id') id: string) {
     return this.coursesService.getScheduleByCourse(id);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(id);
-  }
-
-  @Put(':id')
-  @Roles(Role.Admin)
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(id, updateCourseDto);
   }
 
 }

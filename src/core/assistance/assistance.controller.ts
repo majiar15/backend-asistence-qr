@@ -17,7 +17,7 @@ export class AssistanceController {
   @Post('take/student')
   @Roles(Role.Student)
   takeStudent(@Body() body: TakeAssistanceDTO) {
-    return this.assistanceService.take(body);
+    return this.assistanceService.takeStudent(body);
   }
   @Get('last/:id')
   @Roles(Role.Teacher)
