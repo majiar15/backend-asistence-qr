@@ -17,7 +17,7 @@ import { Assistance,AssistanceSchema } from './models/assistance.model';
 import { Device, DeviceSchema } from './models/device.model';
 import { DeviceDataSource } from './device.datasource';
 import { AssistanceTeacher, AssistanceTeacherSchema } from './models/assistance_teacher.model';
-import { AssistanceTeacherDataSource } from './assistance_teacher.datasource';
+import { AssistanceTeacherDataSource } from './assistance_teacher.datasource'; 
 
 
 
