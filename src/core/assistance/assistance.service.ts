@@ -35,7 +35,10 @@ export class AssistanceService {
   takeStudent(body: TakeAssistanceDTO) {
     try {
 
-      const takeAssistanceStudentUseCase = new TakeAssistanceStudentUseCase(this.assistance)
+      const takeAssistanceStudentUseCase = new TakeAssistanceStudentUseCase(
+        this.assistance,
+        this.course
+      )
       
       const data = takeAssistanceStudentUseCase.main(body.courseId, body.studentId);
 

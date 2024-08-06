@@ -3,7 +3,7 @@ import { getDateUTC } from "@common/utils/getDateUTC";
 import { AssistanceDataSource } from "@datasource/assistance.datasource";
 import { CoursesDataSource } from "@datasource/course.datasource";
 import { Courses } from "@datasource/models/course.model";
-import {ForbiddenException} from '@nestjs/common';
+import {BadRequestException, ForbiddenException} from '@nestjs/common';
 import { Types,Document } from "mongoose";
 
 
@@ -21,11 +21,12 @@ export class TakeAssistanceUseCase {
     async main(course_id: string, student_id: string){
         try {
             const date = getDateUTC();
+            console.log("date", date);
             await this.getCourse(course_id)
             await this.validateAsistence(course_id, student_id, date)
             await this.validateLateArrive()
             await this.takeAsistence(course_id, student_id, date);
-            return this.response;
+            return this.response; 
         } catch (error) {
             throw error;
         }
@@ -97,6 +98,9 @@ export class TakeAssistanceUseCase {
 
             if (!isInClass) {
                 throw new ForbiddenException("El estudiante no está en clase");
+            }
+            if(!this.isvalidAssistance){
+                throw new BadRequestException("Asistencia Invalida");
             }
         }
     }
