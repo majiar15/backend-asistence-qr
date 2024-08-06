@@ -5,6 +5,7 @@ import { CreateAssistanceDTO } from './dto/create-assistance-teacher.dto';
 import { CoursesDataSource } from '@datasource/course.datasource';
 import { AssistanceTeacherDataSource } from '@datasource/assistance_teacher.datasource';
 import { GetTodayAssistanceTeacherUseCase } from './domain/get_today_assistance_teacher.useCase';
+import {  UpdateSecretAssistanceTeacherUseCase  } from './domain/update_secret_assistance_teacher.useCase';
 
 @Injectable()
 export class AssistanceTeacherService {
@@ -40,10 +41,33 @@ export class AssistanceTeacherService {
     try {
 
       const getTodayAssistanceTeacherUseCase = new GetTodayAssistanceTeacherUseCase(
-        this.assistanceTeacher
+        this.assistanceTeacher,
+        this.course
       )
       const data = getTodayAssistanceTeacherUseCase.main(
         courseId,
+        teacher_id
+      );
+
+      return data
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  updateSecret(
+    bitacora_Id: string,
+    secret: string,
+    teacher_id: string
+  ) {
+    try {
+
+      const updateSecretAssistanceTeacherUseCase = new UpdateSecretAssistanceTeacherUseCase(
+        this.assistanceTeacher
+      )
+      const data = updateSecretAssistanceTeacherUseCase.main(
+        bitacora_Id,
+        secret,
         teacher_id
       );
 

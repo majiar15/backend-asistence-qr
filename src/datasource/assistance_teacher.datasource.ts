@@ -23,11 +23,26 @@ export class AssistanceTeacherDataSource {
         })
     }
     async getAssistance(course_id: string, teacher_id: string, date: Date) {
+        console.log("course_id",course_id);
         return this.assistanceTeacher.findOne({
             teacher_id,
             date,
             course_id
         })
+    }
+    async updateSecret(bitacoraId: string, secret: string, teacher_id: string) {
+        return this.assistanceTeacher.findOneAndUpdate(
+            {
+                _id: bitacoraId,
+                teacher_id: teacher_id
+            },
+            {
+                secret
+            },
+            {
+                new: true
+            }
+        )
     }
     async getAssistanceByCourse(course_id: string, date: Date) {
         return this.assistanceTeacher.find({
