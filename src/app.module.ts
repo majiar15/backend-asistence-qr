@@ -7,12 +7,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EnvConfiguration } from '@common/config/env.config';
 import { TeacherModule } from './core/teacher/teacher.module';
 import { CoursesModule } from './core/courses/courses.module';
-import { AdminModule } from '@core/admin/admin.module';
+import { AdminModule } from './core/admin/admin.module';
 import { StudentModule } from './core/student/student.module';
 import { AcademicProgramModule } from './core/academic_program/academic_program.module';
-import { AssistanceModule } from '@core/assistance/assistance.module';
+import { AssistanceModule } from './core/assistance/assistance.module';
 import { EnrollModule } from './core/enroll/enroll.module';
-import { AssistanceTeacherModule } from '@core/assistance_teacher/assistanceTeacher.module';
+import { AssistanceTeacherModule } from './core/assistance_teacher/assistanceTeacher.module';
 
 
 
