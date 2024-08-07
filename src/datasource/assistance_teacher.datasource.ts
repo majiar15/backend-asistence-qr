@@ -31,6 +31,12 @@ export class AssistanceTeacherDataSource {
             course_id
         })
     }
+    async getAssistanceByDate(course_id: string, date: Date) {
+        return this.assistanceTeacher.findOne({
+            date,
+            course_id
+        })
+    }
     async updateSecret(bitacoraId: string, secret: string, teacher_id: string) {
         return this.assistanceTeacher.findOneAndUpdate(
             {
@@ -56,19 +62,5 @@ export class AssistanceTeacherDataSource {
         .sort({ date: -1 })
         .exec();
     }
-    async getAssistanceByDate(date: Date,course_id: string) {
-        const startOfDay = new Date(date);
-        const endOfDay = new Date(date);
-        startOfDay.setUTCHours(0, 0, 0, 0);
 
-        endOfDay.setUTCHours(23, 59, 59, 999);
-        return this.assistanceTeacher.find({
-            date: {
-                $gte: startOfDay,
-                $lte: endOfDay
-            },
-            course_id
-        })
-        .exec();
-    }
 }

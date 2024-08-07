@@ -1,7 +1,9 @@
 
 import { getDateUTC } from "@common/utils/getDateUTC";
 import { AssistanceDataSource } from "@datasource/assistance.datasource";
+import { AssistanceTeacherDataSource } from "@datasource/assistance_teacher.datasource";
 import { CoursesDataSource } from "@datasource/course.datasource";
+import { AssistanceTeacher } from "@datasource/models/assistance_teacher.model";
 import { Courses } from "@datasource/models/course.model";
 import {BadRequestException, ForbiddenException} from '@nestjs/common';
 import { Types,Document } from "mongoose";
@@ -13,11 +15,13 @@ export class TakeAssistanceStudentUseCase {
     course: Courses;
     isLateArrive = false;
     isvalidAssistance = false;
+    teacherAsistance: AssistanceTeacher;
 
 
     constructor(
         private AssistanceDataSource: AssistanceDataSource,
-        private CourseDataSource: CoursesDataSource
+        private CourseDataSource: CoursesDataSource,
+        private AssistanceTeacherSource: AssistanceTeacherDataSource
     ){}
 
     async main(course_id: string, student_id: string){
@@ -25,6 +29,7 @@ export class TakeAssistanceStudentUseCase {
             const date = getDateUTC();
             await this.validateAsistence(course_id, student_id, date)
             await this.getCourse(course_id);
+            await this.getAsistanceTeacher(course_id,date);
             this.validateLateArrive();
             await this.takeAsistence(course_id, student_id, date);
             return this.response;
@@ -46,6 +51,12 @@ export class TakeAssistanceStudentUseCase {
             throw new ForbiddenException("Curso no encontrado");
         }
     }
+    async getAsistanceTeacher(course_id: string, date: Date){
+        this.teacherAsistance = await this.AssistanceTeacherSource.getAssistanceByDate(course_id, date);
+        if (!this.teacherAsistance) {
+            throw new ForbiddenException("El profesor aun no ha iniciado la clase");
+        }
+    }
     async validateLateArrive() {
         if (this.course) {
             console.log("assist", this.course);
@@ -65,12 +76,13 @@ export class TakeAssistanceStudentUseCase {
 
             const isInClass = this.course.schedules.some((schedule: any) => {
                 const scheduleStartMinutes = toMinutes(schedule.hour_start);
+                const teacherInitClass = toMinutes(this.teacherAsistance.hour_start);
                 const scheduleEndMinutes = toMinutes(schedule.hour_end);
                 const currentTimeMinutes = toMinutes(currentTime);
 
                 const isAfterStart = currentTimeMinutes >= scheduleStartMinutes;
                 const isBeforeEnd = currentTimeMinutes <= scheduleEndMinutes;
-                const isWithin15MinutesAfterStart = currentTimeMinutes > scheduleStartMinutes + 15;
+                const isWithin15MinutesAfterStart = currentTimeMinutes > teacherInitClass + 15;
                 console.log("============ ---------- ================");
                 console.log("=========== currentTimeMinutes ==========", currentTimeMinutes);
                 console.log("=========== scheduleStartMinutes ==========", scheduleStartMinutes);
