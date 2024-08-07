@@ -63,7 +63,7 @@ export class UpdateSecretAssistanceTeacherUseCase {
         }
         const inClass = await this.isCourseActiveAndInClass();
         this.response = {
-            status: false,
+            status: true,
             data: {
                 _id :bitacora._id,
                 date :bitacora.date,
