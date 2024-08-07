@@ -16,6 +16,9 @@ import { ValidateUserUseCase } from "./domain/validateUser.useCase"
 import { ValidatePhoneUseCase } from "./domain/validate_phone.useCase"
 import { ChangePasswordUseCase } from "./domain/change_password.useCase"
 import { ChangePasswordDto } from "./dto/change-password.dto"
+import { UpdatePasswordUseCase } from "./domain/update-password.useCase"
+import { UpdatePasswordDto } from "./dto/update-password.dto"
+import { IPayload } from "@common/interfaces/payload.interface"
 
 @Injectable()
 export class AuthService {
@@ -108,4 +111,16 @@ export class AuthService {
     }
   }
 
+
+  async updatePassword(updatePassword: UpdatePasswordDto,payload:IPayload ) {
+    try {
+      const validateUser = new UpdatePasswordUseCase(this.userModel,this.studentModel);
+      const data = await validateUser.main(updatePassword,payload);
+      return data;
+
+    } catch (error) {
+
+      throw error
+    }
+  }
 }

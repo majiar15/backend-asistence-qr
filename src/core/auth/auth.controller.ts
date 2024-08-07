@@ -10,6 +10,7 @@ import { Payload } from '@common/decorators/payload.decorator';
 import { IPayload } from '@common/interfaces/payload.interface';
 import { StudentAuthDto } from './dto/student-auth.dto';
 import { ChangePasswordDto, ValidatePhoneDto, ValidateUserDto } from './dto/change-password.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 
 @Controller('auth')
@@ -52,6 +53,15 @@ export class AuthController {
 
     return this.authService.loginStudent(studentAuth)
   }
+
+  @Post('update-password')
+  updatePassword(@Body() updatePassword: UpdatePasswordDto, @Payload() payload: IPayload) {
+
+    return this.authService.updatePassword(updatePassword,payload)
+  }
+
+
+
 
   @Public()
   @Post('validate-user')

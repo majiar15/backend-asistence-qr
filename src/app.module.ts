@@ -14,6 +14,7 @@ import { AssistanceModule } from './core/assistance/assistance.module';
 import { EnrollModule } from './core/enroll/enroll.module';
 // @ts-ignore
 import { AssistanceTeacherModule } from './core/assistance_teacher/assistanceTeacher.module';
+import { ContactSupportModule } from './core/contact_support/contact_support.module';
 
 
 
@@ -37,6 +38,7 @@ import { AssistanceTeacherModule } from './core/assistance_teacher/assistanceTea
     AssistanceModule,
     EnrollModule,
     AssistanceTeacherModule,
+    ContactSupportModule,
     
   ],
   controllers: [AppController],

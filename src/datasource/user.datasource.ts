@@ -60,7 +60,7 @@ export class UserDataSource {
         })
     }
 
-    updateUser(id: string, data) {
+    updateUser(id: any, data) {
         return this.users.findByIdAndUpdate(id, data, { new: true })
         .select('-password -delete')
     }

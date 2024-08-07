@@ -18,6 +18,8 @@ import { Device, DeviceSchema } from './models/device.model';
 import { DeviceDataSource } from './device.datasource';
 import { AssistanceTeacher, AssistanceTeacherSchema } from './models/assistance_teacher.model';
 import { AssistanceTeacherDataSource } from './assistance_teacher.datasource'; 
+import { ContactSupportDataSource } from './contact_support.datasource';
+import { ContactSupport, ContactSupportSchema } from './models/contact_support.model';
 
 
 
@@ -32,6 +34,7 @@ import { AssistanceTeacherDataSource } from './assistance_teacher.datasource';
         MongooseModule.forFeature([{ name: Assistance.name, schema: AssistanceSchema }]),
         MongooseModule.forFeature([{ name: Device.name, schema: DeviceSchema }]),
         MongooseModule.forFeature([{ name: AssistanceTeacher.name, schema: AssistanceTeacherSchema }]),
+        MongooseModule.forFeature([{ name: ContactSupport.name, schema: ContactSupportSchema }]),
     ],
     controllers: [],
     exports: [
@@ -43,7 +46,8 @@ import { AssistanceTeacherDataSource } from './assistance_teacher.datasource';
         StudentDataSource,
         AssistanceDataSource,
         DeviceDataSource,
-        AssistanceTeacherDataSource
+        AssistanceTeacherDataSource,
+        ContactSupportDataSource
     ],
     providers: [
         UserDataSource,
@@ -54,7 +58,8 @@ import { AssistanceTeacherDataSource } from './assistance_teacher.datasource';
         StudentDataSource,
         AssistanceDataSource,
         DeviceDataSource,
-        AssistanceTeacherDataSource
+        AssistanceTeacherDataSource,
+        ContactSupportDataSource
     ]
 })
 export class dataSourceModule { }
