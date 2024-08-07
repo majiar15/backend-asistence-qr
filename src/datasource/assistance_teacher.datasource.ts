@@ -37,6 +37,19 @@ export class AssistanceTeacherDataSource {
             course_id
         })
     }
+    async getCourseByBitacora(_id: string) {
+        return this.assistanceTeacher.findById(
+            _id
+        )
+        .populate('course_id')
+        .populate({
+            path: 'course_id',
+            populate: {
+              path: 'schedules',
+              model: 'Schedule'
+            }
+          });
+    }
     async updateSecret(bitacoraId: string, secret: string, teacher_id: string) {
         return this.assistanceTeacher.findOneAndUpdate(
             {
