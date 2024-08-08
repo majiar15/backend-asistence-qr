@@ -5,7 +5,7 @@ import { Types,Document } from "mongoose";
 
 export class GetAllAcademicProgramUseCase{
 
-    response: { status: boolean; data: Document<unknown, {}, any> & any & { _id: Types.ObjectId; }; }
+    response: { status: boolean; data: Document<unknown, any, any> & any & { _id: Types.ObjectId; }; }
 
     constructor(private academicProgramDataSource: AcademicProgramDataSource){}
 

@@ -16,6 +16,7 @@ export class CreateContactSupportUseCase{
 
         try {
             await this.saveContactSuport(body)
+            return this.response;
         } catch (error) {
             throw error;
         }
