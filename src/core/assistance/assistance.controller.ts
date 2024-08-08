@@ -3,6 +3,7 @@ import { AssistanceService } from './assistance.service';
 import { Role } from '@common/utils/rol.enum';
 import { Roles } from '@common/decorators/roles.decorator';
 import { TakeAssistanceDTO } from './dto/take-assistance.dto';
+import { TakeAssistanceStudentDTO } from './dto/take-assistance-student.dto';
 
 @Controller('assistance')
 export class AssistanceController {
@@ -16,7 +17,7 @@ export class AssistanceController {
   }
   @Post('take/student')
   @Roles(Role.Student)
-  takeStudent(@Body() body: TakeAssistanceDTO) {
+  takeStudent(@Body() body: TakeAssistanceStudentDTO) {
     return this.assistanceService.takeStudent(body);
   }
   @Get('last/:id')

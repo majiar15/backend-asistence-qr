@@ -37,6 +37,19 @@ export class AssistanceTeacherDataSource {
             course_id
         })
     }
+    async getAssistanceBySecret(secret: string) {
+        return this.assistanceTeacher.findOne({
+            secret
+        })
+        .populate('course_id')
+        .populate({
+            path: 'course_id',
+            populate: {
+              path: 'schedules',
+              model: 'Schedule'
+            }
+          });
+    }
     async getCourseByBitacora(_id: string) {
         return this.assistanceTeacher.findById(
             _id

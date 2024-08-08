@@ -24,14 +24,15 @@ export class TakeAssistanceStudentUseCase {
         private AssistanceTeacherSource: AssistanceTeacherDataSource
     ){}
 
-    async main(course_id: string, student_id: string){
+    async main(secret: string, student_id: string){
         try {
             const date = getDateUTC();
-            await this.validateAsistence(course_id, student_id, date)
-            await this.getCourse(course_id);
-            await this.getAsistanceTeacher(course_id,date);
+            await this.getAsistanceTeacher(secret);
+            await this.validateAsistence(student_id, date)
+
+           
             this.validateLateArrive();
-            await this.takeAsistence(course_id, student_id, date);
+            await this.takeAsistence(student_id, date);
             return this.response;
         } catch (error) {
             throw error;
@@ -39,23 +40,20 @@ export class TakeAssistanceStudentUseCase {
 
     }
 
-    async validateAsistence(course_id: string, student_id: string, date: Date){
-        const assist = await this.AssistanceDataSource.getAssistance(course_id, student_id, date);
+    async validateAsistence( student_id: string, date: Date){
+        const assist = await this.AssistanceDataSource.getAssistance(this.course._id, student_id, date);
         if (assist) {
             throw new ForbiddenException("Estudiante ya asistió");
         }
     }
-    async getCourse(course_id: string){
-        this.course = await this.CourseDataSource.getCourseByIdIncludeStudents(course_id);
-        if (!this.course) {
-            throw new ForbiddenException("Curso no encontrado");
-        }
-    }
-    async getAsistanceTeacher(course_id: string, date: Date){
-        this.teacherAsistance = await this.AssistanceTeacherSource.getAssistanceByDate(course_id, date);
+    async getAsistanceTeacher(secret: string){
+        this.teacherAsistance = await this.AssistanceTeacherSource.getAssistanceBySecret(secret);
         if (!this.teacherAsistance) {
             throw new ForbiddenException("El profesor aun no ha iniciado la clase");
         }
+        //@ts-ignore
+        this.course = this.teacherAsistance.course_id;
+
     }
     async validateLateArrive() {
         if (this.course) {
@@ -118,9 +116,9 @@ export class TakeAssistanceStudentUseCase {
             }
         }
     }
-    async takeAsistence(course_id: string, student_id: string, date: Date){
+    async takeAsistence(student_id: string, date: Date){
         console.log("this.isLateArrive",this.isLateArrive);
-        const data= await this.AssistanceDataSource.takeAssistance(course_id, student_id, date, this.isLateArrive)
+        const data= await this.AssistanceDataSource.takeAssistance(this.course._id, student_id, date, this.isLateArrive)
         this.response= {status:true,data}
     }
 

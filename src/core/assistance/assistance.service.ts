@@ -7,6 +7,7 @@ import { GetByDateAssistanceUseCase } from './domain/get_by_date.useCase';
 import { TakeAssistanceStudentUseCase } from './domain/take_assistance_student.useCase';
 import { CoursesDataSource } from '@datasource/course.datasource';
 import { AssistanceTeacherDataSource } from '@datasource/assistance_teacher.datasource';
+import { TakeAssistanceStudentDTO } from './dto/take-assistance-student.dto';
 
 @Injectable()
 export class AssistanceService {
@@ -36,7 +37,7 @@ export class AssistanceService {
       throw error;
     }
   }
-  takeStudent(body: TakeAssistanceDTO) {
+  takeStudent(body: TakeAssistanceStudentDTO) {
     try {
 
       const takeAssistanceStudentUseCase = new TakeAssistanceStudentUseCase(
@@ -45,7 +46,7 @@ export class AssistanceService {
         this.assistanceTeacher
       )
       
-      const data = takeAssistanceStudentUseCase.main(body.courseId, body.studentId);
+      const data = takeAssistanceStudentUseCase.main(body.secret, body.studentId);
 
       return data
     } catch (error) {
