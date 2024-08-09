@@ -9,6 +9,7 @@ import { StudentDataSource } from "@datasource/student.datasource";
 import { StudentAuthDto } from "../dto/student-auth.dto";
 import { DeviceDataSource } from "@datasource/device.datasource";
 import { DeviceDocument } from "@datasource/models/device.model";
+import { getDateUTCComplete } from "@common/utils/getDateUTC";
 
 
 export class LoginStudentUseCase {
@@ -79,15 +80,18 @@ export class LoginStudentUseCase {
 
     if (this.device) {
 
-      const date = this.getCurrentDateTime();
-
+      const date = getDateUTCComplete();
+      console.log("object", this.device);
       if (this.device.date) {
-        const deviceDate = moment(this.device.date);
-        const today = moment(date);
+        console.log("date", date);
+        console.log("this.device.date", this.device.date);
+        const deviceDate = this.device.date.getTime();
+        const today = date.getTime();
 
-        const differenceInSeconds = Math.abs(today.diff(deviceDate, 'seconds'));
+        const differenceInMs = today - deviceDate;
+        const differenceInHours = differenceInMs / (1000 * 60 * 60);
 
-        if (differenceInSeconds < 7200 && !this.device.student_id.equals(this.user._id)) {
+        if (differenceInHours <= 4 && !this.device.student_id.equals(this.user._id)) {
           throw new ForbiddenException('DEVICE_ALREADY_IN_USE_BY_STUDENT');
         }
       }

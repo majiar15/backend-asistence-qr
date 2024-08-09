@@ -8,6 +8,7 @@ import { TakeAssistanceStudentUseCase } from './domain/take_assistance_student.u
 import { CoursesDataSource } from '@datasource/course.datasource';
 import { AssistanceTeacherDataSource } from '@datasource/assistance_teacher.datasource';
 import { TakeAssistanceStudentDTO } from './dto/take-assistance-student.dto';
+import { DeviceDataSource } from '@datasource/device.datasource';
 
 @Injectable()
 export class AssistanceService {
@@ -15,6 +16,7 @@ export class AssistanceService {
   constructor(
     private readonly assistance: AssistanceDataSource,
     private readonly course: CoursesDataSource,
+    private readonly device: DeviceDataSource,
     private readonly assistanceTeacher: AssistanceTeacherDataSource,
   ) { }
 
@@ -42,7 +44,7 @@ export class AssistanceService {
 
       const takeAssistanceStudentUseCase = new TakeAssistanceStudentUseCase(
         this.assistance,
-        this.course,
+        this.device,
         this.assistanceTeacher
       )
       

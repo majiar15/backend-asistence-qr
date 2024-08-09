@@ -1,8 +1,8 @@
 
-import { getDateUTC } from "@common/utils/getDateUTC";
+import { getDateUTC, getDateUTCComplete } from "@common/utils/getDateUTC";
 import { AssistanceDataSource } from "@datasource/assistance.datasource";
 import { AssistanceTeacherDataSource } from "@datasource/assistance_teacher.datasource";
-import { CoursesDataSource } from "@datasource/course.datasource";
+import { DeviceDataSource } from "@datasource/device.datasource";
 import { AssistanceTeacher } from "@datasource/models/assistance_teacher.model";
 import { Courses } from "@datasource/models/course.model";
 import {BadRequestException, ForbiddenException} from '@nestjs/common';
@@ -20,7 +20,7 @@ export class TakeAssistanceStudentUseCase {
 
     constructor(
         private AssistanceDataSource: AssistanceDataSource,
-        private CourseDataSource: CoursesDataSource,
+        private deviceDatasource: DeviceDataSource,
         private AssistanceTeacherSource: AssistanceTeacherDataSource
     ){}
 
@@ -30,9 +30,9 @@ export class TakeAssistanceStudentUseCase {
             await this.getAsistanceTeacher(secret);
             await this.validateAsistence(student_id, date)
 
-           
             this.validateLateArrive();
             await this.takeAsistence(student_id, date);
+            await this.savehHourAsistance(student_id);
             return this.response;
         } catch (error) {
             throw error;
@@ -120,6 +120,15 @@ export class TakeAssistanceStudentUseCase {
         console.log("this.isLateArrive",this.isLateArrive);
         const data= await this.AssistanceDataSource.takeAssistance(this.course._id, student_id, date, this.isLateArrive)
         this.response= {status:true,data}
+    }
+    async savehHourAsistance(student_id: string){
+        const dateNow = getDateUTCComplete();
+        console.log("this.isLateArrive",this.isLateArrive);
+        await this.deviceDatasource.updateDevice({
+            student_id: student_id
+        },{
+            date: dateNow
+        });
     }
 
 }
