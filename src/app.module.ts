@@ -14,6 +14,7 @@ import { AssistanceModule } from './core/assistance/assistance.module';
 import { EnrollModule } from './core/enroll/enroll.module';
 import { ContactSupportModule } from './core/contact_support/contact_support.module';
 import { AssistanceTeacherModule } from './core/assistance_teacher/assistanceTeacher.module';
+import { ReportsModule } from './core/reports/reports.module';
 
 
 
@@ -24,7 +25,7 @@ import { AssistanceTeacherModule } from './core/assistance_teacher/assistanceTea
     }),
     AuthModule,
     MongooseModule.forRoot(EnvConfiguration().db_uri,{
-      dbName: 'Unilibre', // Aquí especificas el nombre de tu base de datos personalizado
+      //dbName: 'Unilibre', // Aquí especificas el nombre de tu base de datos personalizado
       
       retryWrites: true,
       w: 'majority',
@@ -38,6 +39,7 @@ import { AssistanceTeacherModule } from './core/assistance_teacher/assistanceTea
     EnrollModule,
     AssistanceTeacherModule,
     ContactSupportModule,
+    ReportsModule,
     
   ],
   controllers: [AppController],

@@ -89,4 +89,11 @@ export class AssistanceTeacherDataSource {
         .exec();
     }
 
+    async getAssistanceTeacherForCourse(course_id: string) {
+        return this.assistanceTeacher.find({ course_id})
+        .exec();
+    }
+
+    
+
 }
