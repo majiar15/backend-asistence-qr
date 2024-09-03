@@ -3,6 +3,8 @@ import { DownloadReportsStudentsUseCase } from './domain/download-reports-studen
 import { CoursesDataSource } from '@datasource/course.datasource';
 import { AssistanceDataSource } from '@datasource/assistance.datasource';
 import { AssistanceTeacherDataSource } from '@datasource/assistance_teacher.datasource';
+import { ReportByStudentUseCase } from './domain/report-by-student.useCase';
+import { ReportStudentDto } from './dto/create-report.dto';
 
 @Injectable()
 export class ReportsService {
@@ -26,6 +28,19 @@ export class ReportsService {
       
       const courseUseCase = new DownloadReportsStudentsUseCase(this.courseModel, this.assistanceModel,this.assistanceTeacherModel)
       const data = await courseUseCase.main(id);
+      return data
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async reportsStudent(query: ReportStudentDto) {
+    try {
+      
+      const courseUseCase = new ReportByStudentUseCase(this.assistanceModel,this.assistanceTeacherModel)
+      const data = await courseUseCase.main(query);
       return data
 
     } catch (error) {

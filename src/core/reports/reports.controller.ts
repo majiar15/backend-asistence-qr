@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ReportsService } from './reports.service';
+import { ReportStudentDto } from './dto/create-report.dto';
 
 
 @Controller('reports')
@@ -10,6 +11,13 @@ export class ReportsController {
   @Get('download/reports-students/:id')
   reportsStudents(@Param('id') id: string) {
     return this.reportsService.reportsStudents(id);
+    
+  }
+
+  @Get('student')
+  reportsStudent(@Query() query: ReportStudentDto) {
+    console.log("🚀 ~ ReportsController ~ reportsStudent ~ id:", query)
+    return this.reportsService.reportsStudent(query);
     
   }
 

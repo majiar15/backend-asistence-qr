@@ -116,4 +116,12 @@ export class AssistanceDataSource {
             }
         ]);
     }
+
+    async getStudentAssistanceByCourse(student_id: string,course_id:string) {
+        
+        return this.Assistance.find({
+            student_id,
+            course_id
+        }).exec();
+    }
 }
