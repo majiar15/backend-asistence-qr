@@ -23,11 +23,11 @@ export class ReportsService {
   //   return `This action returns all reports`;
   // }
 
-  async reportsStudents(id: string) {
+  async reportsStudents(courseId: string) {
     try {
       
       const courseUseCase = new DownloadReportsStudentsUseCase(this.courseModel, this.assistanceModel,this.assistanceTeacherModel)
-      const data = await courseUseCase.main(id);
+      const data = await courseUseCase.main(courseId);
       return data
 
     } catch (error) {

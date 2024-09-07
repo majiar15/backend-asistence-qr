@@ -25,7 +25,7 @@ import { ReportsModule } from './core/reports/reports.module';
     }),
     AuthModule,
     MongooseModule.forRoot(EnvConfiguration().db_uri,{
-      //dbName: 'Unilibre', // Aquí especificas el nombre de tu base de datos personalizado
+      dbName: 'Unilibre', // Aquí especificas el nombre de tu base de datos personalizado
       
       retryWrites: true,
       w: 'majority',

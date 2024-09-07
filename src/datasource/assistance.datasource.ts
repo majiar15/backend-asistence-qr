@@ -90,8 +90,10 @@ export class AssistanceDataSource {
                         code: "$student.code",
                         name: "$student.name",
                         surnames: "$student.surnames",
+                        email: "$student.email",
                         course: "$course.name",
-                        academicProgram: "$academic_program.code"
+                        academicProgram: "$academic_program.code",
+                        
                     },
                     dates: {
                         $push: {
@@ -111,6 +113,7 @@ export class AssistanceDataSource {
                     surnames: "$_id.surnames",
                     course: "$_id.course",
                     academicProgram: "$_id.academicProgram",
+                    email:"$_id.email",
                     dates: 1
                 }
             }

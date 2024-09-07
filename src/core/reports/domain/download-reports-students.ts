@@ -4,8 +4,7 @@ import { CoursesDocument } from "@datasource/models/course.model";
 import { NotFoundException } from "@nestjs/common";
 
 import { AssistanceTeacherDataSource } from "@datasource/assistance_teacher.datasource";
-import * as XLSX from 'xlsx';
-import { join } from "path";
+import { formatDate } from "@common/utils/formatDate";
 
 export class DownloadReportsStudentsUseCase{
 
@@ -24,21 +23,31 @@ export class DownloadReportsStudentsUseCase{
     async main(course_id:string){
 
         try {
+            await this.getCourse(course_id)
             await this.getAssistanceTeacherForCourse(course_id)
             await this.getAssistanceForCourse(course_id)
-            const response = await this.loadExcel();
-            return response
+            const data = await this.buildJson();
+            // const response = await this.loadExcel();
+            return data;
         } catch (error) {
             throw error;
         }
 
+    }
+    
+    async getCourse(course_id: string) { 
+        this.course = await this.coursesDataSource.getCourseById(course_id);
+        console.log("🚀 ~  getCourseById ", this.course)
+        if(!this.course){
+            throw new NotFoundException(`COURSE_NOT_FOUND`);
+        }
     }
 
 
     private async getAssistanceTeacherForCourse(course_id:string){
 
         this.assistanceTeachers = await this.assistanceTeacherDataSource.getAssistanceTeacherForCourse(course_id);
-        console.log("🚀 ~  getAssistanceTeacherForCourse ", this.assistanceTeachers)
+        //console.log("🚀 ~  getAssistanceTeacherForCourse ", this.assistanceTeachers)
         if(!this.assistanceTeachers){
             throw new NotFoundException(`ASSISTANCE_TEACHER_NOT_FOUND`);
         }
@@ -48,50 +57,34 @@ export class DownloadReportsStudentsUseCase{
     private async getAssistanceForCourse(course_id:string){
 
         this.assistanceStudents = await this.assistanceDataSource.getAssistanceForCourse(course_id)
-        console.log("🚀 ~  this.assistance:",  this.assistanceStudents)
         if(!this.assistanceStudents){
             throw new NotFoundException(`ASSISTANCE_NOT_FOUND`);
         }
         
     }
 
-    
+    async buildJson() {
 
-    private async loadExcel(){
+        const professorDates = this.assistanceTeachers.map(item => formatDate(item.date));
 
-        const filePath = join(__dirname, '../../../../uploads/matr43.xlsx');
+        // Crea la fila de encabezado
+        const headers = [ 'Código','No. Identificacion','Codigo programa','Nombre','Correo institucional', ...professorDates];
 
-        const workbook = XLSX.readFile(filePath);
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        const sortedStudentsData = this.assistanceStudents.sort((a, b) => a.name.localeCompare(b.name));
 
-        const wsData = XLSX.utils.sheet_to_json(worksheet);
-
-
-        
-
-        this.assistanceStudents.forEach(student => {
-            const attendanceDates = student.dates.join(', ');
-            wsData.push([student.dni, `${student.name} ${student.surnames}`, student.course, attendanceDates]);
+        const rows = sortedStudentsData.map(student => {
+            const studentName = `${student.name} ${student.surnames}`;
+            const dni = student.dni;
+            const code = student.code;
+            const program = student.academicProgram;
+            const email = student.email;
+            // Compara las fechas y marca con "X" si el estudiante asistió
+            const attendance = professorDates.map(date => {
+              const studentAttendance = student.dates.find(d => d.date === date);
+              return studentAttendance ? 'X' : '';
+            });
+            return [code,dni,program,studentName,email, ...attendance];
           });
-        //   let row = 18;
-        //   this.assistanceStudents.forEach((student,index) => {
-        //     worksheet[`B${row}`] = { v: index };
-        //     worksheet[`F${row}`] = { v: student.code };
-        //     worksheet[`K${row}`] = { v: student.dni };
-        //     worksheet[`O${row}`] = { v: student.academicProgram };
-        //     worksheet[`S${row}`] = { v: student.ID };
-        //     worksheet[`X${row}`] = { v: student.ID };
-        //     worksheet[`Z${row}`] = { v: student.ID };
-        //     row++;
-        //   });
-          const newWorksheet = XLSX.utils.json_to_sheet(wsData);
-
-          workbook.Sheets[sheetName] = newWorksheet;
-      
-          // Generar el buffer del archivo Excel
-          const newFilePath = join(__dirname, '../../../../', 'public', 'modified_template.xlsx');
-          XLSX.writeFile(workbook, newFilePath);
-          return `Archivo modificado guardado en: /public/modified_template.xlsx`;
+        return [headers, ...rows];
     }
 }
