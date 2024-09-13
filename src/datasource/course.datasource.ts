@@ -50,7 +50,7 @@ export class CoursesDataSource {
 
     async getCourseById(id:string):Promise<CoursesDocument>{
         return await this.courses.findOne({_id:id, delete: false })
-        .populate(['schedules','teacher_id'])
+        .populate(['schedules','teacher_id','academic_programs'])
         .select('-students -delete');
     }
 

@@ -1,6 +1,5 @@
 import { CoursesDataSource } from "@datasource/course.datasource";
 import { AssistanceDataSource } from "@datasource/assistance.datasource";
-import { CoursesDocument } from "@datasource/models/course.model";
 import { NotFoundException } from "@nestjs/common";
 
 import { AssistanceTeacherDataSource } from "@datasource/assistance_teacher.datasource";
@@ -8,7 +7,7 @@ import { formatDate } from "@common/utils/formatDate";
 
 export class DownloadReportsStudentsUseCase{
 
-    course:CoursesDocument;
+    course:any;
     assistanceStudents:any[];
     assistanceTeachers:any[];
     wsData :any[];
@@ -66,9 +65,17 @@ export class DownloadReportsStudentsUseCase{
     async buildJson() {
 
         const professorDates = this.assistanceTeachers.map(item => formatDate(item.date));
-
+        console.log("🚀 ~ this.course:", this.course) 
+        const header =[
+            ['Facultad',this.course.academic_programs[0].faculty],
+            ['Programa',this.course.academic_programs[0].name],
+            ['Materia',this.course.name],
+            ['Docente',this.course.teacher_id.name+ ' '+this.course.teacher_id.surnames],
+            ['[ X ] Llegó puntual | [ - ] Llegó tarde | [     ] No asistió'],
+            ['']
+        ]
         // Crea la fila de encabezado
-        const headers = [ 'Código','No. Identificacion','Codigo programa','Nombre','Correo institucional', ...professorDates];
+        const info = [ 'Código','No. Identificacion','Codigo programa','Nombre','Correo institucional', ...professorDates];
 
         const sortedStudentsData = this.assistanceStudents.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -81,10 +88,15 @@ export class DownloadReportsStudentsUseCase{
             // Compara las fechas y marca con "X" si el estudiante asistió
             const attendance = professorDates.map(date => {
               const studentAttendance = student.dates.find(d => d.date === date);
-              return studentAttendance ? 'X' : '';
+              return studentAttendance 
+                ?  studentAttendance.late 
+                    ? '-'
+                    : "X" 
+                : '';
             });
             return [code,dni,program,studentName,email, ...attendance];
           });
-        return [headers, ...rows];
+        return [...header,info, ...rows];
     }
+         
 }
